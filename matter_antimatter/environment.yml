@@ -1,0 +1,15 @@
+name: matter_antimatter
+channels:
+  - conda-forge
+dependencies:
+  - pip
+  - python
+  - numpy
+  - matplotlib
+  - scipy
+  - uproot
+  - pandas
+  - scipy
+  - scikit-learn
+  - jax
+  - dm-haiku
