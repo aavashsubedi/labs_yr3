@@ -10,18 +10,13 @@ from utils.printing_results import print_results
 from utils.plotting_functions import default_plot
 
 def main():
-    events_path = "data/example_file.root"
+    
     # Read data
-    pT, pX, pY, pZ = read_file(MAX_EVENTS=5000, mode=1)
+    pT, pX, pY, pZ, h1_prob, h2_prob, h3_prob, master_prob, inv_mass= read_file(MAX_EVENTS=5000, mode=1, path_name="")
 
+    print(inv_mass)
 
-
-    coeff_pT,cov_pT, bin_centres_pT, bin_centres_red_pT, chi2_pT, ndf_pT = fit_data( bins_pT, values_pT, 5000, 15000, [100,10000,10000] )
-
-    print_results(coeff_pT,cov_pT, chi2_pT, ndf_pT)
-    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(10, 6))
-
-    default_plot(ax,bin_centres_pT,bin_centres_red_pT,values_pT,coeff_pT,'fit_pT.pdf')
+    
 
     return None
 
