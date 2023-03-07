@@ -16,9 +16,9 @@ def find_invariant_mass(momentum_1=[0, 0, 0],
     E3 = np.sqrt(np.square(p3_x) + np.square(p3_y) + np.square(p3_z) + np.square(mass_array[2]))
         
     energy_squared   = np.square(E1 + E2 + E3)
-    total_momentum_x = p1_x + p2_y + p3_z
-    total_momentum_y = p1_x + p2_y + p3_z
-    total_momenum_z  = p3_x + p3_y + p3_z
+    total_momentum_x = p1_x + p2_x + p3_x
+    total_momentum_y = p1_y + p2_y + p3_y
+    total_momenum_z  = p1_z + p2_z + p3_z
     #total momentum
     inv_mass_squared = energy_squared - np.square(
         total_momentum_x) - np.square(total_momentum_y) - np.square(total_momenum_z)
