@@ -12,7 +12,7 @@ from utils.plotting_functions import default_plot
 def main():
     events_path = "data/example_file.root"
     # Read data
-    pT, pX, pY, pZ = read_file(MAX_EVENTS=5000, mode=0)
+    pT, pX, pY, pZ = read_file(MAX_EVENTS=5000, mode=1)
 
 
 
