@@ -62,7 +62,7 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
     elif mode == 2:
         # Magnet down data
         events_down = uproot.open(path+'B2HHH_MagnetDown.root')
-        trees = [events_down[b'DecayTree']]
+        trees = [events_down['DecayTree']]
         print("Magnet down data")
         print(events_down.keys())
     elif mode == 3:
@@ -72,7 +72,7 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
         print("Magnet up data")
         print(events_up.keys())
     elif mode == 4:
-        trees = [events_down[b'DecayTree'], events_up['DecayTree']]
+        trees = [events_down['DecayTree'], events_up['DecayTree']]
         print("Magnet up and down data")
         print(events_down.keys())
     else:

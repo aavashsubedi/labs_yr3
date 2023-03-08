@@ -8,14 +8,15 @@ from src.file_reading import read_file
 from src.fitting_functions import fit_data
 from utils.printing_results import print_results
 from utils.plotting_functions import default_plot
+from src.Task1_plot_prob import plotting_histograms_probability
 
 def main():
     
     # Read data
-    pT, pX, pY, pZ, h1_prob, h2_prob, h3_prob, master_prob, inv_mass= read_file(MAX_EVENTS=5000, mode=1, path_name="")
+    pT, pX, pY, pZ, h1_prob, h2_prob, h3_prob, master_prob, inv_mass= read_file(MAX_EVENTS=50000, mode=2, path_name="")
 
-    print(inv_mass)
-
+    #print(inv_mass)
+    plotting_histograms_probability(master_prob[0], master_prob[1], savefig_name="total")
     
 
     return None
