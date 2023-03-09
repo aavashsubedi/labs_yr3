@@ -7,8 +7,12 @@ def is_pion(probabilities, pimin=0.5):
     if probabilities[0] > pimin:
         return True
     return False
+<<<<<<< HEAD
 
 
+=======
+    
+>>>>>>> 457d525dac4949a062c836c679ece238ddd00a47
 def is_kaon(probabilities, kmin=0.6, pimax=0.4):
     if probabilities[1] > kmin:
         if probabilities[0] < pimax:
