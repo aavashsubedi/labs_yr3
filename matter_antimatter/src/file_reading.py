@@ -123,10 +123,10 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
                     muon_prob = [data['H1_isMuon'][i], data['H2_isMuon'][i], data['H3_isMuon'][i]]
                 
                     #check if any of the muon_prob is 1
-                    if ~any(muon_prob):
+                    if any(muon_prob):
                         continue
 
-                    if selection_rule_iterator(probabilities_itr, charges_itr):
+                    if selection_rule_iterator(probabilities_itr, charges_itr) is False:
                         continue
                 # Fill arrays of events to be plotted and analysed further below
                 # Adding values for all three hadrons to the same variable here
