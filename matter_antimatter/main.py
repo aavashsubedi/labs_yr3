@@ -10,6 +10,9 @@ from utils.printing_results import print_results
 from utils.plotting_functions import default_plot
 from src.Task1_plot_prob import plotting_histograms_probability
 
+
+
+
 def main():
     
     # Read data
@@ -17,7 +20,7 @@ def main():
     print(len(h1_prob[0]))
 
     #print(inv_mass)
-    #plotting_histograms_probability(master_prob[0], master_prob[1], savefig_name="total_initsel")
+    plotting_histograms_probability(master_prob[0], master_prob[1], savefig_name="small_sel")
     
 
     return None
