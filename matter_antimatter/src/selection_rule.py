@@ -58,18 +58,23 @@ def selection_rule(data,  selection_mode = 0):
 
     return indices
 #(pion_prob, kaon_prob)
-def is_pion(probabilities, pimin=0.5):
+def is_pion(probabilities, pimin=0.8):
 
     if probabilities[0] > pimin:
         return True
     return False
     
-def is_kaon(probabilities, kmin=0.6, pimax=0.4):
+def is_kaon(probabilities, kmin=0.8, pimax=0.2):
     if probabilities[1] > kmin:
         if probabilities[0] < pimax:
             return True
     return False
 
+def is_neither(probabilities, kmin=0.2, pi_min=0.2):
+    if probabilities[0] < pi_min:
+        if probabilities[1] < kmin:
+            return True
+    return False
 def selection_rule_iterator(probabilites = [[], [], []],
                             charges = [1, 1, -1]):
 
