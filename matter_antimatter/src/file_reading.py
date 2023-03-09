@@ -3,6 +3,7 @@ import uproot
 from tqdm import tqdm
 from src.invariant_mass import find_invariant_mass
 from src.selection_rule import selection_rule
+from src.selection_rule import selection_rule_iterator
 list_of_interesting_keys = []
 for i in range(1, 4):
     exec(f"list_of_interesting_keys.append('H{i}_PX')")
@@ -98,8 +99,7 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
             invariant_mass_array.append(inv_mass)
             #invariant_mass_array.append(0)
 
-            if selection:
-                interesting_indices = selection_rule(data)
+
 
 
 
@@ -113,6 +113,21 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
                 # Decide here which events to analyse
                 if (data['H1_PZ'][i] < 0) or (data['H2_PZ'][i] < 0) or (data['H3_PZ'][i] < 0):
                     continue
+
+
+                if selection:
+                    probabilities_itr = [[data['H1_ProbK'][i], data['H1_ProbPi'][i]],
+                                        [data['H2_ProbK'][i], data['H2_ProbPi'][i]],
+                                        [data['H3_ProbK'][i], data['H3_ProbPi'][i]]]
+                    charges_itr = [data['H1_Charge'][i], data['H2_Charge'][i], data['H3_Charge'][i]]
+                    muon_prob = [data['H1_isMuon'][i], data['H2_isMuon'][i], data['H3_isMuon'][i]]
+                
+                    #check if any of the muon_prob is 1
+                    if ~any(muon_prob):
+                        continue
+
+                    if selection_rule_iterator(probabilities_itr, charges_itr):
+                        continue
                 # Fill arrays of events to be plotted and analysed further below
                 # Adding values for all three hadrons to the same variable here
                 pT.append(pT_H1[i])

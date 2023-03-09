@@ -1,6 +1,6 @@
 import numpy as np
 
-def check_pion(charge_array_1, charge_array_2, charge_array_3.
+def check_pion(charge_array_1, charge_array_2, charge_array_3,
                 probabilities_1, probabilities_2, probabilities_3):
 
     summed_charge = charge_array_1[0] + charge_array_2[0] + charge_array_3[0]
@@ -9,7 +9,7 @@ def check_pion(charge_array_1, charge_array_2, charge_array_3.
     indices_1 = np.where(charge_array_1 != summed_charge)
     # check in charge_array_1 with the indices of intrest and find the probability
     # that it is a kaon or a pion and check if its greater than 0.5
-
+    return 0
     #check 
 
 def simple_selection(prob_array_h1=[[], []],
@@ -24,7 +24,7 @@ def simple_selection(prob_array_h1=[[], []],
     indices = np.setdiff1d(all_indices, indices[0])
 
     return indices
-
+ 
 def selection_rule(data,  selection_mode = 0):
     
     """
@@ -57,3 +57,21 @@ def selection_rule(data,  selection_mode = 0):
 
 
     return indices
+#(pion_prob, kaon_prob)
+def is_pion_iterator(probabilities):
+
+    if probabilities[0] > 0.5:
+        return 1
+
+def selection_rule_iterator(probabilites = [[], [], []],
+                            charges = [1, 1, -1]):
+
+    summed_charges = charges[0] + charges[1] + charges[2]
+
+    index_intrest = np.where(charges != summed_charges)
+
+    if is_pion_iterator(probabilites[index_intrest]):
+        return 1
+
+    return 0
+
