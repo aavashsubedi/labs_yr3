@@ -2,7 +2,7 @@ import numpy as np
 import uproot
 from tqdm import tqdm
 from src.invariant_mass import find_invariant_mass
-
+from src.selection_rule import selection_rule
 list_of_interesting_keys = []
 for i in range(1, 4):
     exec(f"list_of_interesting_keys.append('H{i}_PX')")
@@ -14,7 +14,8 @@ for i in range(1, 4):
     exec(f"list_of_interesting_keys.append('H{i}_isMuon')  ")
 
 
-def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_keys):
+def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_keys,
+              selection=False):
 
     if not path_name:
         path = 'data/'  # set this to '' to run on the GitHub version
@@ -96,6 +97,11 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
             inv_mass = find_invariant_mass(p1_array, p2_array, p3_array)
             invariant_mass_array.append(inv_mass)
             #invariant_mass_array.append(0)
+
+            if selection:
+                interesting_indices = selection_rule(data)
+
+
 
             # This loop will go over individual events
             for i in range(0, len(data['H1_PZ'])):
