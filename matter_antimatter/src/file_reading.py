@@ -4,6 +4,10 @@ from tqdm import tqdm
 from src.invariant_mass import find_invariant_mass
 from src.selection_rule import selection_rule
 from src.selection_rule import selection_rule_iterator
+from src.selection_rule import assign_kaon_iterator
+
+
+
 list_of_interesting_keys = []
 for i in range(1, 4):
     exec(f"list_of_interesting_keys.append('H{i}_PX')")
@@ -128,6 +132,11 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
 
                     if selection_rule_iterator(probabilities_itr, charges_itr) is False:
                         continue
+
+                    if assign_kaon_iterator(probabilities_itr, charges_itr) is False:
+                        continue
+
+                
                 # Fill arrays of events to be plotted and analysed further below
                 # Adding values for all three hadrons to the same variable here
                 pT.append(pT_H1[i])

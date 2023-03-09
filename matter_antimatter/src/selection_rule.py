@@ -58,20 +58,54 @@ def selection_rule(data,  selection_mode = 0):
 
     return indices
 #(pion_prob, kaon_prob)
-def is_pion_iterator(probabilities):
+def is_pion(probabilities, pimin=0.5):
 
-    if probabilities[0] > 0.5:
-        return 1
+    if probabilities[0] > pimin:
+        return True
+    return False
+    
+def is_kaon(probabilities, kmin=0.6, pimax=0.4):
+    if probabilities[1] > kmin:
+        if probabilities[0] < pimax:
+            return True
+    return False
 
 def selection_rule_iterator(probabilites = [[], [], []],
                             charges = [1, 1, -1]):
 
     summed_charges = charges[0] + charges[1] + charges[2]
 
-    index_intrest = np.where(charges != summed_charges)
+    #index_intrest = np.where(charges != summed_charges)
+    index_interest = []
+    for index in range(0, len(charges)):
+        if(charges[index] != summed_charges):
+            index_interest.append(index)
 
-    if is_pion_iterator(probabilites[index_intrest]):
-        return 1
-
+    
+    for index_iterator in index_interest:
+        if is_pion(probabilites[index_iterator]):
+            return 1
+    
     return 0
+
+def assign_kaon_iterator(probabilites = [[], [], []],
+                         charges = [1, 1, -1]):
+    
+    summed_charges = charges[0] + charges[1] + charges[2]
+    count_pion = 1
+    count_kaon = 0
+
+    for iterator_particles in range(0, len(charges)):
+        
+            
+        if(charges[iterator_particles] == summed_charges):
+            if is_kaon(probabilites[iterator_particles]):
+                count_kaon += 1
+            if is_pion(probabilites[iterator_particles]):
+                count_pion += 1
+    
+    if count_kaon == 1:
+        return True
+    
+    return False
 
