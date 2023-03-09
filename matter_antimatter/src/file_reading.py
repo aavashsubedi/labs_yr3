@@ -136,14 +136,14 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
                     if assign_kaon_iterator(probabilities_itr, charges_itr) is False:
                         continue
 
-                
+                kaon_place = assign_kaon_iterator(probabilities_itr, charges_itr)
                 # Your invariant mass calculation should go here
                 p1_array = [data['H1_PX'][i], data['H1_PY'][i], data['H1_PZ'][i]]
                 p2_array = [data['H2_PX'][i], data['H2_PY'][i], data['H2_PZ'][i]]
                 p3_array = [data['H3_PX'][i], data['H3_PY'][i], data['H3_PZ'][i]]
-                #inv_mass = find_invariant_mass(p1_array, p2_array, p3_array, mass_array=[])
-                #invariant_mass_array.append(inv_mass)
-                invariant_mass_array.append(0)
+                inv_mass = find_invariant_mass(p1_array, p2_array, p3_array, is_kaon=kaon_place)
+                invariant_mass_array.append(inv_mass)
+                #invariant_mass_array.append(0)
 
                 # Fill arrays of events to be plotted and analysed further below
                 # Adding values for all three hadrons to the same variable here

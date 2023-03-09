@@ -1,12 +1,23 @@
 import numpy as np
+from utils.constants import MASS_KAON
+from utils.constants import MASS_PION
 
 
 
 def find_invariant_mass(momentum_1=[0, 0, 0],
                                    momentum_2=[0, 0, 0],
                                    momentum_3=[0, 0, 0],
-                                   mass_array=[493.677, 493.677, 493.677]):
+                                   is_kaon=[1, 1, 1]):
     
+
+    mass_array=[]
+    for i in is_kaon:
+        if i == 1:
+            mass_array.append(MASS_KAON)
+        else:
+            mass_array.append(MASS_PION)
+
+
     p1_x, p1_y, p1_z = momentum_1
     p2_x, p2_y, p2_z = momentum_2
     p3_x, p3_y, p3_z = momentum_3

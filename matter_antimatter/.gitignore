@@ -2,5 +2,3 @@
 *.root
 *.ipynb
 *.pyc
-/workspaces/labs_yr3/matter_antimatter/src/__pycache__/
-/workspaces/labs_yr3/matter_antimatter/utils/__pycache__/
