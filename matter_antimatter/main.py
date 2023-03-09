@@ -16,7 +16,7 @@ from src.Task1_plot_prob import plotting_histograms_probability
 def main():
     
     # Read data
-    pT, pX, pY, pZ, h1_prob, h2_prob, h3_prob, master_prob, inv_mass= read_file(MAX_EVENTS=1000, mode=2, path_name="", selection=True)
+    pT, pX, pY, pZ, h1_prob, h2_prob, h3_prob, master_prob, inv_mass= read_file(MAX_EVENTS=10000, mode=3, path_name="", selection=True)
     print(len(h1_prob[0]))
     np.savetxt("data/inv_mass.csv", inv_mass, delimiter=',')
     #print(inv_mass)
