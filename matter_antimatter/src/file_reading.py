@@ -2,9 +2,12 @@ import numpy as np
 import uproot
 from tqdm import tqdm
 from src.invariant_mass import find_invariant_mass
-from src.selection_rule import selection_rule
+
 from src.selection_rule import selection_rule_iterator
 from src.selection_rule import assign_kaon_iterator
+
+from utils.constants import MASS_PION
+from utils.constants import MASS_KAON
 
 
 
@@ -20,7 +23,7 @@ for i in range(1, 4):
 
 
 def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_keys,
-              selection=False):
+              selection=False, output=""):
 
     if not path_name:
         path = 'data/'  # set this to '' to run on the GitHub version
@@ -94,13 +97,11 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
             pT_H2 = np.sqrt(data['H2_PX']**2+data['H2_PY']**2)
             pT_H3 = np.sqrt(data['H3_PX']**2+data['H3_PY']**2)
 
-            p1_array = [data['H1_PX'], data['H1_PY'], data['H1_PZ']]
-            p2_array = [data['H2_PX'], data['H2_PY'], data['H2_PZ']]
-            p3_array = [data['H3_PX'], data['H3_PY'], data['H3_PZ']]
+            #p1_array = [data['H1_PX'], data['H1_PY'], data['H1_PZ']]
+            #p2_array = [data['H2_PX'], data['H2_PY'], data['H2_PZ']]
+            #p3_array = [data['H3_PX'], data['H3_PY'], data['H3_PZ']]
 
-            # Your invariant mass calculation should go here
-            inv_mass = find_invariant_mass(p1_array, p2_array, p3_array)
-            invariant_mass_array.append(inv_mass)
+            
             #invariant_mass_array.append(0)
 
 
@@ -120,9 +121,9 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
 
 
                 if selection:
-                    probabilities_itr = [[data['H1_ProbK'][i], data['H1_ProbPi'][i]],
-                                        [data['H2_ProbK'][i], data['H2_ProbPi'][i]],
-                                        [data['H3_ProbK'][i], data['H3_ProbPi'][i]]]
+                    probabilities_itr = [[data['H1_ProbPi'][i], data['H1_ProbK'][i]],
+                                        [data['H2_ProbPi'][i], data['H2_ProbK'][i]],
+                                        [data['H3_ProbPi'][i], data['H3_ProbK'][i]]]
                     charges_itr = [data['H1_Charge'][i], data['H2_Charge'][i], data['H3_Charge'][i]]
                     muon_prob = [data['H1_isMuon'][i], data['H2_isMuon'][i], data['H3_isMuon'][i]]
                 
@@ -137,6 +138,14 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
                         continue
 
                 
+                # Your invariant mass calculation should go here
+                p1_array = [data['H1_PX'][i], data['H1_PY'][i], data['H1_PZ'][i]]
+                p2_array = [data['H2_PX'][i], data['H2_PY'][i], data['H2_PZ'][i]]
+                p3_array = [data['H3_PX'][i], data['H3_PY'][i], data['H3_PZ'][i]]
+                #inv_mass = find_invariant_mass(p1_array, p2_array, p3_array, mass_array=[])
+                #invariant_mass_array.append(inv_mass)
+                invariant_mass_array.append(0)
+
                 # Fill arrays of events to be plotted and analysed further below
                 # Adding values for all three hadrons to the same variable here
                 pT.append(pT_H1[i])
@@ -169,6 +178,8 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
                 master_probk.append(data['H3_ProbK'][i])
 
     print(f"Read {event_counter:d} events")
+
+    
 
     return [pT, pX, pY, pZ, (h1_probpi, h1_probk), (h2_probpi, h2_probk), (h3_probpi, h3_probk), (master_probpi, master_probk), invariant_mass_array]
 
