@@ -89,7 +89,7 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
         return [[0], [0], [0], [0]]
     print("Varialbes read")
     print()
-    for tree in tqdm(trees):
+    for tree in trees:
         # This outer loop is a technical loop of uproot over chunks of events
         for data in tree.iterate(keys):
             # As Python can handle calculations with arrays, we can calculate derived quantities here
@@ -107,9 +107,8 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
 
 
 
-
             # This loop will go over individual events
-            for i in range(0, len(data['H1_PZ'])):
+            for i in tqdm(range(0, MAX_EVENTS)):
                 event_counter += 1
                 if 0 < MAX_EVENTS and MAX_EVENTS < event_counter:
                     break
