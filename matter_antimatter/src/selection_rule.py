@@ -2,23 +2,27 @@ import numpy as np
 
 
 #(pion_prob, kaon_prob)
-def is_pion(probabilities, pimin=0.8):
+def is_pion(probabilities, pimin=0.5):
 
     if probabilities[0] > pimin:
         return True
     return False
-    
-def is_kaon(probabilities, kmin=0.8, pimax=0.2):
+
+
+def is_kaon(probabilities, kmin=0.6, pimax=0.4):
     if probabilities[1] > kmin:
         if probabilities[0] < pimax:
             return True
     return False
+
 
 def is_neither(probabilities, kmin=0.2, pi_min=0.2):
     if probabilities[0] < pi_min:
         if probabilities[1] < kmin:
             return True
     return False
+
+
 def selection_rule_iterator(probabilites = [[], [], []],
                             charges = [1, 1, -1]):
 
@@ -36,6 +40,7 @@ def selection_rule_iterator(probabilites = [[], [], []],
             return 1
     
     return 0
+
 
 def assign_kaon_iterator(probabilites = [[], [], []],
                          charges = [1, 1, -1]):
@@ -58,11 +63,12 @@ def assign_kaon_iterator(probabilites = [[], [], []],
                 where_kaon.append(0)
 
         if(charges[iterator_particles] != summed_charges):
-            where_kaon.append(0)
+            if is_pion(probabilites[iterator_particles]):
+                where_kaon.append(0)
     #print(where_kaon)
     if count_kaon == 1:
         if len(where_kaon) == 3:
-            return True
+            return where_kaon
     
     return False
 
