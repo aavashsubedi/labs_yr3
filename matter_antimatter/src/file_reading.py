@@ -81,6 +81,8 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
         print("Magnet up data")
         print(events_up.keys())
     elif mode == 4:
+        events_up = uproot.open(path+'B2HHH_MagnetUp.root')
+        events_down = uproot.open(path+'B2HHH_MagnetDown.root')
         trees = [events_down['DecayTree'], events_up['DecayTree']]
         print("Magnet up and down data")
         print(events_down.keys())
@@ -108,12 +110,12 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
 
 
             # This loop will go over individual events
-            for i in tqdm(range(0, MAX_EVENTS)):
+            for i in tqdm(range(0, len(data['H1_PZ']))):
                 event_counter += 1
                 if 0 < MAX_EVENTS and MAX_EVENTS < event_counter:
                     break
-                if 0 == (event_counter % 100000):
-                    print('Read', event_counter, 'events')
+                #if 0 == (event_counter % 100000):
+                    #print('Read', event_counter, 'events')
                 # Decide here which events to analyse
                 if (data['H1_PZ'][i] < 0) or (data['H2_PZ'][i] < 0) or (data['H3_PZ'][i] < 0):
                     continue
@@ -137,14 +139,13 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
                         continue
 
                     kaon_place = assign_kaon_iterator(probabilities_itr, charges_itr)
-                else:
-                    kaon_place = True
-                # Your invariant mass calculation should go here
-                p1_array = [data['H1_PX'][i], data['H1_PY'][i], data['H1_PZ'][i]]
-                p2_array = [data['H2_PX'][i], data['H2_PY'][i], data['H2_PZ'][i]]
-                p3_array = [data['H3_PX'][i], data['H3_PY'][i], data['H3_PZ'][i]]
-                inv_mass = find_invariant_mass(p1_array, p2_array, p3_array, is_kaon=kaon_place)
-                invariant_mass_array.append(inv_mass)
+                
+                    # Your invariant mass calculation should go here
+                    p1_array = [data['H1_PX'][i], data['H1_PY'][i], data['H1_PZ'][i]]
+                    p2_array = [data['H2_PX'][i], data['H2_PY'][i], data['H2_PZ'][i]]
+                    p3_array = [data['H3_PX'][i], data['H3_PY'][i], data['H3_PZ'][i]]
+                    inv_mass = find_invariant_mass(p1_array, p2_array, p3_array, is_kaon=kaon_place)
+                    invariant_mass_array.append(inv_mass)
                 #invariant_mass_array.append(0)
 
                 # Fill arrays of events to be plotted and analysed further below
