@@ -40,6 +40,12 @@ def selection_rule_iterator(probabilites = [[], [], []],
     
     return 0
 
+def charge_rule_iterator(charges = [1, 1, -1], 
+                         intrested_charge = 1):
+    summed_charges = charges[0] + charges[1] + charges[2]
+    if summed_charges == intrested_charge:
+        return True
+    return False
 
 def assign_kaon_iterator(probabilites = [[], [], []],
                          charges = [1, 1, -1]):
