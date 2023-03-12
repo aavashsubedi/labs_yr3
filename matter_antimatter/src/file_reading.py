@@ -6,6 +6,7 @@ from src.invariant_mass import find_invariant_mass
 from src.selection_rule import selection_rule_iterator
 from src.selection_rule import assign_kaon_iterator
 from src.two_body_resonance import find_resonance
+from src.selection_rule import charge_rule_iterator
 
 from utils.constants import MASS_PION
 from utils.constants import MASS_KAON
@@ -24,7 +25,8 @@ for i in range(1, 4):
 
 
 def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_keys,
-              selection=False, output=""):
+              selection=False, output="", interest=None):
+    #if interest == "B_plus" or interest == "B_minus" then we apply the selection rule
 
     if not path_name:
         path = 'data/'  # set this to '' to run on the GitHub version
@@ -55,7 +57,7 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
     invariant_mass_array = []
     two_body_resonance_array = np.array([[-1, -1]])
 
-
+    print(f" Selecting {interest} events")
 
     print("Input data varaiables: ")
     if mode == 0:
@@ -139,7 +141,14 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
 
                     if assign_kaon_iterator(probabilities_itr, charges_itr) is False:
                         continue
-
+                    
+                    if interest == "B+" or interest == "B-":
+                        if interest == "B+":
+                            if charge_rule_iterator(charges_itr, +1) is False:
+                                continue
+                        elif interest == "B-":
+                            if charge_rule_iterator(charges_itr, -1) is False:
+                                continue
                     kaon_place = assign_kaon_iterator(probabilities_itr, charges_itr)
                 
                     # Your invariant mass calculation should go here
