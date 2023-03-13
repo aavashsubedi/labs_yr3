@@ -5,6 +5,8 @@ from src.invariant_mass import find_invariant_mass
 
 from src.selection_rule import selection_rule_iterator
 from src.selection_rule import assign_kaon_iterator
+from src.two_body_resonance import find_resonance
+from src.selection_rule import charge_rule_iterator
 
 from utils.constants import MASS_PION
 from utils.constants import MASS_KAON
@@ -23,7 +25,8 @@ for i in range(1, 4):
 
 
 def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_keys,
-              selection=False, output=""):
+              selection=False, output="", interest=None):
+    #if interest == "B_plus" or interest == "B_minus" then we apply the selection rule
 
     if not path_name:
         path = 'data/'  # set this to '' to run on the GitHub version
@@ -52,8 +55,9 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
     master_probk = []
 
     invariant_mass_array = []
+    two_body_resonance_array = np.array([[-1, -1]])
 
-
+    print(f" Selecting {interest} events")
 
     print("Input data varaiables: ")
     if mode == 0:
@@ -81,6 +85,8 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
         print("Magnet up data")
         print(events_up.keys())
     elif mode == 4:
+        events_up = uproot.open(path+'B2HHH_MagnetUp.root')
+        events_down = uproot.open(path+'B2HHH_MagnetDown.root')
         trees = [events_down['DecayTree'], events_up['DecayTree']]
         print("Magnet up and down data")
         print(events_down.keys())
@@ -108,12 +114,12 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
 
 
             # This loop will go over individual events
-            for i in tqdm(range(0, MAX_EVENTS)):
+            for i in tqdm(range(0, len(data['H1_PZ']))):
                 event_counter += 1
                 if 0 < MAX_EVENTS and MAX_EVENTS < event_counter:
                     break
-                if 0 == (event_counter % 100000):
-                    print('Read', event_counter, 'events')
+                #if 0 == (event_counter % 100000):
+                    #print('Read', event_counter, 'events')
                 # Decide here which events to analyse
                 if (data['H1_PZ'][i] < 0) or (data['H2_PZ'][i] < 0) or (data['H3_PZ'][i] < 0):
                     continue
@@ -135,15 +141,28 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
 
                     if assign_kaon_iterator(probabilities_itr, charges_itr) is False:
                         continue
+                    
+                    if interest == "B+" or interest == "B-":
+                        if interest == "B+":
+                            if charge_rule_iterator(charges_itr, +1) is False:
+                                continue
+                        elif interest == "B-":
+                            if charge_rule_iterator(charges_itr, -1) is False:
+                                continue
+                    kaon_place = assign_kaon_iterator(probabilities_itr, charges_itr)
+                
+                    # Your invariant mass calculation should go here
+                    p1_array = [data['H1_PX'][i], data['H1_PY'][i], data['H1_PZ'][i]]
+                    p2_array = [data['H2_PX'][i], data['H2_PY'][i], data['H2_PZ'][i]]
+                    p3_array = [data['H3_PX'][i], data['H3_PY'][i], data['H3_PZ'][i]]
+                    inv_mass = find_invariant_mass(p1_array, p2_array, p3_array, is_kaon=kaon_place)
+                    invariant_mass_array.append(inv_mass)
 
-                kaon_place = assign_kaon_iterator(probabilities_itr, charges_itr)
-                # Your invariant mass calculation should go here
-                p1_array = [data['H1_PX'][i], data['H1_PY'][i], data['H1_PZ'][i]]
-                p2_array = [data['H2_PX'][i], data['H2_PY'][i], data['H2_PZ'][i]]
-                p3_array = [data['H3_PX'][i], data['H3_PY'][i], data['H3_PZ'][i]]
-                inv_mass = find_invariant_mass(p1_array, p2_array, p3_array, is_kaon=kaon_place)
-                invariant_mass_array.append(inv_mass)
-                #invariant_mass_array.append(0)
+                    # may create another file to iterate through all evants but for now use the same function as it is faster
+                    resonance = find_resonance(p1_array, p2_array, p3_array, is_kaon=kaon_place, charge=charges_itr)
+                    two_body_resonance_array = np.append(two_body_resonance_array, [resonance], axis=0)
+                
+                
 
                 # Fill arrays of events to be plotted and analysed further below
                 # Adding values for all three hadrons to the same variable here
@@ -180,7 +199,7 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
 
     
 
-    return [pT, pX, pY, pZ, (h1_probpi, h1_probk), (h2_probpi, h2_probk), (h3_probpi, h3_probk), (master_probpi, master_probk), invariant_mass_array]
+    return [pT, pX, pY, pZ, (h1_probpi, h1_probk), (h2_probpi, h2_probk), (h3_probpi, h3_probk), (master_probpi, master_probk), invariant_mass_array, two_body_resonance_array]
 
 
 if __name__ == "__main__":

@@ -16,12 +16,14 @@ from src.Task1_plot_prob import plotting_histograms_probability
 def main():
     
     # Read data
-    pT, pX, pY, pZ, h1_prob, h2_prob, h3_prob, master_prob, inv_mass= read_file(MAX_EVENTS=1000, mode=2, path_name="", selection=True)
+    pT, pX, pY, pZ, h1_prob, h2_prob, h3_prob, master_prob, inv_mass, two_body= read_file(MAX_EVENTS=50000, mode=4, path_name="", selection=True)
     print(len(h1_prob[0]))
-    np.savetxt("data/inv_mass.csv", inv_mass, delimiter=',')
+    #np.savetxt("data/inv_mass.csv", inv_mass, delimiter=',')
     #print(inv_mass)
     #plotting_histograms_probability(master_prob[0], master_prob[1], savefig_name="small_sel")
-    plt.hist(inv_mass, bins=100, range=[4500, 6400], histtype='step')
+    two_body = np.array(two_body)
+    two_body.flatten
+    plt.hist(two_body, bins=500, range=[500, 5000], histtype='step')
     plt.show()
     
 
