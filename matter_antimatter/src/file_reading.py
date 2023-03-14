@@ -133,6 +133,7 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
                                         [data['H2_ProbPi'][i], data['H2_ProbK'][i]],
                                         [data['H3_ProbPi'][i], data['H3_ProbK'][i]]]
                     charges_itr = [data['H1_Charge'][i], data['H2_Charge'][i], data['H3_Charge'][i]]
+                    
                     muon_prob = [data['H1_isMuon'][i], data['H2_isMuon'][i], data['H3_isMuon'][i]]
                 
                     #check if any of the muon_prob is 1
@@ -201,6 +202,7 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
     print(f"Read {event_counter:d} events")
 
     
+    two_body_resonance_array = np.delete(two_body_resonance_array, 0, axis=0)
 
     return [pT, pX, pY, pZ, (h1_probpi, h1_probk), (h2_probpi, h2_probk), (h3_probpi, h3_probk), (master_probpi, master_probk), invariant_mass_array, two_body_resonance_array]
 

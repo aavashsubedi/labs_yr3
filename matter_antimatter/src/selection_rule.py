@@ -28,15 +28,18 @@ def selection_rule_iterator(probabilites = [[], [], []],
     summed_charges = charges[0] + charges[1] + charges[2]
 
     #index_intrest = np.where(charges != summed_charges)
-    index_interest = []
+    index_interest = -1
     for index in range(0, len(charges)):
         if(charges[index] != summed_charges):
-            index_interest.append(index)
+            index_interest = index
 
     
-    for index_iterator in index_interest:
-        if is_pion(probabilites[index_iterator]):
-            return 1
+    #for index_iterator in index_interest:
+        #if is_pion(probabilites[index_iterator]):
+            #return 1
+
+    if is_pion(probabilites[index_interest]):
+        return 1
     
     return 0
 
