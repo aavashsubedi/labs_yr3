@@ -1,5 +1,6 @@
 import numpy as np
 from src.invariant_mass import inv_mass_2body
+from tqdm import tqdm
 
 
 def find_resonance(momentum_1=[0, 0, 0],
@@ -36,29 +37,36 @@ def find_resonance(momentum_1=[0, 0, 0],
     body2_index = -1
     inv_mass = [0, 0]
     
-    print("New event:")
-    print(is_kaon)
+    #print("New event:")
+    #print(is_kaon)
     for j in range(0, len(is_kaon)):
         if charge[j] != total_charge:
             body1_index = j
-            print("    {0}".format(j))
+            #print("    {0}".format(j))
             break
 
     for i in range(0, len(is_kaon)):
         if charge[i] == total_charge:
-            body2_index == i
+            body2_index = i
 
             if is_kaon[i] == 1:
-                print("    filling 0")
+                #print("    filling 0")
                 inv_mass[0] = inv_mass_2body(momentum_matrix[body1_index, :], 
-                                            momentum_matrix[i, :], 
-                                            is_kaon=[is_kaon[body1_index], is_kaon[i]])
+                                            momentum_matrix[body2_index, :], 
+                                            is_kaon=[is_kaon[body1_index], is_kaon[body2_index]])
             else:
-                print("    filling 1")
+                #print("    filling 1")
                 inv_mass[1] = inv_mass_2body(momentum_matrix[body1_index, :], 
-                                            momentum_matrix[i, :], 
-                                            is_kaon=[is_kaon[body1_index], is_kaon[i]])
+                                            momentum_matrix[body2_index, :], 
+                                            is_kaon=[is_kaon[body1_index], is_kaon[body2_index]])
 
             
     return inv_mass
+
+def iterate_events(pT, p_H1, p_H2, p_H3, h1_prob, h2_prob, h3_prob, master_prob, invariant_mass_array):
+    print("Iterating all read events:")
+    for event_iterator in tqdm(range(0, len(invariant_mass_array))):
+        if invariant_mass_array[event_iterator] <6000:
+            continue
+
 

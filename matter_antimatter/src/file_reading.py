@@ -36,10 +36,18 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
     #temporarily 
     event_counter = 0
 
-    pX = []
-    pY = []
-    pZ = []
+    pX_H1 = []
+    pX_H2 = []
+    pX_H3 = []
+    pY_H1 = []
+    pY_H2 = []
+    pY_H3 = []
+    pZ_H1 = []
+    pZ_H2 = []
+    pZ_H3 = []
     pT = []
+    pT_H2 = []
+    pT_H3 = []
 
 
     h1_probpi = []
@@ -115,7 +123,7 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
             # else:
             #     num_elem = MAX_EVENTS
             num_elem = MAX_EVENTS if MAX_EVENTS < len(data['H1_PZ']) else len(data['H1_PZ'])
-            print(num_elem)
+            #print(num_elem)
             # This loop will go over individual events
             for i in tqdm(range(0, num_elem)):
                 event_counter += 1
@@ -173,15 +181,15 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
                 pT.append(pT_H1[i])
                 pT.append(pT_H2[i])
                 pT.append(pT_H3[i])
-                pX.append(data['H1_PX'][i])
-                pX.append(data['H2_PX'][i])
-                pX.append(data['H3_PX'][i])
-                pY.append(data['H1_PY'][i])
-                pY.append(data['H2_PY'][i])
-                pY.append(data['H3_PY'][i])
-                pZ.append(data['H1_PZ'][i])
-                pZ.append(data['H2_PZ'][i])
-                pZ.append(data['H3_PZ'][i])
+                pX_H1.append(data['H1_PX'][i])
+                pX_H2.append(data['H2_PX'][i])
+                pX_H3.append(data['H3_PX'][i])
+                pY_H1.append(data['H1_PY'][i])
+                pY_H2.append(data['H2_PY'][i])
+                pY_H3.append(data['H3_PY'][i])
+                pZ_H1.append(data['H1_PZ'][i])
+                pZ_H2.append(data['H2_PZ'][i])
+                pZ_H3.append(data['H3_PZ'][i])
 
                 #
                 h1_probpi.append(data['H1_ProbPi'][i])
@@ -203,8 +211,12 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
 
     
     two_body_resonance_array = np.delete(two_body_resonance_array, 0, axis=0)
+    p_H1 = [pX_H1, pY_H1, pZ_H1]
+    p_H2 = [pX_H2, pY_H2, pZ_H2]
+    p_H3 = [pX_H3, pY_H3, pZ_H3]
 
-    return [pT, pX, pY, pZ, (h1_probpi, h1_probk), (h2_probpi, h2_probk), (h3_probpi, h3_probk), (master_probpi, master_probk), invariant_mass_array, two_body_resonance_array]
+
+    return [pT, p_H1, p_H2, p_H3, (h1_probpi, h1_probk), (h2_probpi, h2_probk), (h3_probpi, h3_probk), (master_probpi, master_probk), invariant_mass_array, two_body_resonance_array]
 
 
 if __name__ == "__main__":
