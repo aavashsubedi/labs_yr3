@@ -5,6 +5,7 @@ from src.invariant_mass import find_invariant_mass
 
 from src.selection_rule import selection_rule_iterator
 from src.selection_rule import assign_kaon_iterator
+from src.two_body_resonance import find_resonance
 from src.selection_rule import charge_rule_iterator
 
 from utils.constants import MASS_PION
@@ -54,6 +55,7 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
     master_probk = []
 
     invariant_mass_array = []
+    two_body_resonance_array = np.array([[-1, -1]])
 
     print(f" Selecting {interest} events")
 
@@ -158,7 +160,12 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
                     p3_array = [data['H3_PX'][i], data['H3_PY'][i], data['H3_PZ'][i]]
                     inv_mass = find_invariant_mass(p1_array, p2_array, p3_array, is_kaon=kaon_place)
                     invariant_mass_array.append(inv_mass)
-                #invariant_mass_array.append(0)
+
+                    # may create another file to iterate through all evants but for now use the same function as it is faster
+                    resonance = find_resonance(p1_array, p2_array, p3_array, is_kaon=kaon_place, charge=charges_itr)
+                    two_body_resonance_array = np.append(two_body_resonance_array, [resonance], axis=0)
+                
+                
 
                 # Fill arrays of events to be plotted and analysed further below
                 # Adding values for all three hadrons to the same variable here
@@ -195,7 +202,7 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
 
     
 
-    return [pT, pX, pY, pZ, (h1_probpi, h1_probk), (h2_probpi, h2_probk), (h3_probpi, h3_probk), (master_probpi, master_probk), invariant_mass_array]
+    return [pT, pX, pY, pZ, (h1_probpi, h1_probk), (h2_probpi, h2_probk), (h3_probpi, h3_probk), (master_probpi, master_probk), invariant_mass_array, two_body_resonance_array]
 
 
 if __name__ == "__main__":
