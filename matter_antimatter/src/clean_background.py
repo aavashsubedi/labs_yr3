@@ -12,7 +12,7 @@ def clean_data(y_data, y_other):
     
     return y_data
 
-def seperate_background_signal(path_name ='/workspaces/labs_yr3/inv_mass.csv',
+def seperate_background_signal(path_name ='data/inv_mass.csv',
                                 bin_num=100, x_min=5100, x_max=5800, expected_resonance=5271,
                                 init_vals=[1000, 5100, 5, 1000, 5300, 10, 10, 5, 5100 ],
                                 fit_func="default"):
@@ -68,6 +68,6 @@ def seperate_background_signal(path_name ='/workspaces/labs_yr3/inv_mass.csv',
     y_background = clean_data(y_data, [y_signal])
 
 
-    return y_signal, y_background
+    return popt, y_signal, y_background
 
 

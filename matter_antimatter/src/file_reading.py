@@ -49,6 +49,12 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
     pT_H2 = []
     pT_H3 = []
 
+    charge_H1 = []
+    charge_H2 = []
+    charge_H3 = []
+
+
+
 
     h1_probpi = []
     h1_probk = []
@@ -64,6 +70,10 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
 
     invariant_mass_array = []
     two_body_resonance_array = np.array([[-1, -1]])
+
+    is_kaon_H1 = []
+    is_kaon_H2 = []
+    is_kaon_H3 = []
 
     print(f" Selecting {interest} events")
 
@@ -162,6 +172,9 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
                             if charge_rule_iterator(charges_itr, -1) is False:
                                 continue
                     kaon_place = assign_kaon_iterator(probabilities_itr, charges_itr)
+                    is_kaon_H1.append(kaon_place[0])
+                    is_kaon_H2.append(kaon_place[1])
+                    is_kaon_H3.append(kaon_place[2])
                 
                     # Your invariant mass calculation should go here
                     p1_array = [data['H1_PX'][i], data['H1_PY'][i], data['H1_PZ'][i]]
@@ -171,8 +184,8 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
                     invariant_mass_array.append(inv_mass)
 
                     # may create another file to iterate through all evants but for now use the same function as it is faster
-                    resonance = find_resonance(p1_array, p2_array, p3_array, is_kaon=kaon_place, charge=charges_itr)
-                    two_body_resonance_array = np.append(two_body_resonance_array, [resonance], axis=0)
+                    #resonance = find_resonance(p1_array, p2_array, p3_array, is_kaon=kaon_place, charge=charges_itr)
+                    #two_body_resonance_array = np.append(two_body_resonance_array, [resonance], axis=0)
                 
                 
 
@@ -207,6 +220,12 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
                 master_probpi.append(data['H3_ProbPi'][i])
                 master_probk.append(data['H3_ProbK'][i])
 
+                ###
+                charge_H1.append(data['H1_Charge'][i])
+                charge_H2.append(data['H2_Charge'][i])
+                charge_H3.append(data['H3_Charge'][i])
+
+
     print(f"Read {event_counter:d} events")
 
     
@@ -215,8 +234,12 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
     p_H2 = [pX_H2, pY_H2, pZ_H2]
     p_H3 = [pX_H3, pY_H3, pZ_H3]
 
+    is_kaon = [is_kaon_H1, is_kaon_H2, is_kaon_H3]
+    
 
-    return [pT, p_H1, p_H2, p_H3, (h1_probpi, h1_probk), (h2_probpi, h2_probk), (h3_probpi, h3_probk), (master_probpi, master_probk), invariant_mass_array, two_body_resonance_array]
+
+    return [pT, p_H1, p_H2, p_H3, (h1_probpi, h1_probk), (h2_probpi, h2_probk), (h3_probpi, h3_probk), (master_probpi, master_probk),
+            invariant_mass_array, is_kaon, charge_H1, charge_H2, charge_H3]
 
 
 if __name__ == "__main__":
