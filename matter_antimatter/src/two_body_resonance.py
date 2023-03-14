@@ -25,7 +25,7 @@ def find_resonance(momentum_1=[0, 0, 0],
     Returns
     -------
     [double, double]
-        invariant masses of both neutral 2 body resonancesfor the event
+        invariant masses of both neutral 2 body resonances for the event [Kpi, pipi]
     """    
     total_charge = np.sum(charge)
 
@@ -34,20 +34,31 @@ def find_resonance(momentum_1=[0, 0, 0],
 
     body1_index = -1
     body2_index = -1
-    inv_mass = []
+    inv_mass = [0, 0]
     
-
-    for i in range(0, len(is_kaon)):
-        if charge[i] != total_charge:
-            body1_index = i
+    print("New event:")
+    print(is_kaon)
+    for j in range(0, len(is_kaon)):
+        if charge[j] != total_charge:
+            body1_index = j
+            print("    {0}".format(j))
             break
 
     for i in range(0, len(is_kaon)):
         if charge[i] == total_charge:
             body2_index == i
-            inv_mass.append( inv_mass_2body(momentum_matrix[body1_index, :], 
-                                            momentum_matrix[body2_index, :], 
-                                            is_kaon=[is_kaon[body1_index], is_kaon[body2_index]]))
+
+            if is_kaon[i] == 1:
+                print("    filling 0")
+                inv_mass[0] = inv_mass_2body(momentum_matrix[body1_index, :], 
+                                            momentum_matrix[i, :], 
+                                            is_kaon=[is_kaon[body1_index], is_kaon[i]])
+            else:
+                print("    filling 1")
+                inv_mass[1] = inv_mass_2body(momentum_matrix[body1_index, :], 
+                                            momentum_matrix[i, :], 
+                                            is_kaon=[is_kaon[body1_index], is_kaon[i]])
+
             
     return inv_mass
 
