@@ -110,11 +110,14 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
             
             #invariant_mass_array.append(0)
 
-
-
-
+            # if MAX_EVENTS > len(data['H1_PZ']):
+            #     num_elem = len(data['H1_PZ'])
+            # else:
+            #     num_elem = MAX_EVENTS
+            num_elem = MAX_EVENTS if MAX_EVENTS < len(data['H1_PZ']) else len(data['H1_PZ'])
+            print(num_elem)
             # This loop will go over individual events
-            for i in tqdm(range(0, len(data['H1_PZ']))):
+            for i in tqdm(range(0, num_elem)):
                 event_counter += 1
                 if 0 < MAX_EVENTS and MAX_EVENTS < event_counter:
                     break
