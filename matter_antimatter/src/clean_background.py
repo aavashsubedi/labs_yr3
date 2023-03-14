@@ -20,7 +20,25 @@ def seperate_background_signal(path_name ='/workspaces/labs_yr3/inv_mass.csv',
     Seperates the background and signal from the data
     using the defaulf parameters for the half gaussian fitting.
     Defaults to entire dataset.
+
+    Parameters
+    ----------
+    path_name : str, optional
+        Path to the data file, by default '/workspaces/labs_yr3/inv_mass.csv'
+    bin_num : int, optional
+        Number of bins to use, by default 100
+    x_min : int, optional
+        Minimum x value to use, by default 5100
+    x_max : int, optional
+        Maximum x value to use, by default 5800
+    expected_resonance : int, optional
+        Expected resonance value, by default 5271. Used to check which is the background
+    init_vals : list, optional
+        Initial values for the fitting, by default [1000, 5100, 5, 1000, 5300, 10, 10, 5, 5100 ]
+    fit_func : str, optional
+        Which fitting function to use, by default "default"
     
+
     """
     #read file
     #dataset = np.genfromtxt(path_name, delimiter=',')
@@ -40,20 +58,13 @@ def seperate_background_signal(path_name ='/workspaces/labs_yr3/inv_mass.csv',
                         popt[3], popt[4], popt[5],
                         popt[6], popt[7], popt[8])
 
-    y_plot_1_diff = np.abs(expected_resonance - popt[1])
-    y_plot_2_diff = np.abs(expected_resonance - popt[4])
-
-    
     y_plot_1 = half_gaussian(x_data, popt[0], popt[1], popt[2])
     y_plot_2 = gaussian(x_data, popt[3], popt[4], popt[5])
     y_plot_3 = exponential(x_data, popt[6], popt[7], popt[8])
-    if abs(y_plot_1_diff) < abs(y_plot_2_diff):
-        other_dataaset = [y_plot_2, y_plot_3]
-    else:
-        other_dataaset = [y_plot_1, y_plot_3]
 
+    other_dataset = [y_plot_1, y_plot_3]
 
-    y_signal = clean_data(y_data, other_dataaset)
+    y_signal = clean_data(y_data, other_dataset)
     y_background = clean_data(y_data, [y_signal])
 
 
