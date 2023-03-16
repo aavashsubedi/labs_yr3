@@ -71,6 +71,7 @@ def iterate_events(pT, p_H1, p_H2, p_H3, h1_prob, h2_prob, h3_prob, master_prob,
     *args : same as outputted by the file reading
     """
     xmin, xmax = (5235, 5333)
+    D_min, D_max = (1800, 1900)
 
     two_body_resonance_array = np.array([[-1, -1]])
     
@@ -86,6 +87,8 @@ def iterate_events(pT, p_H1, p_H2, p_H3, h1_prob, h2_prob, h3_prob, master_prob,
         p2 = [p_H2[0][event_iterator], p_H2[1][event_iterator], p_H2[2][event_iterator] ]
         p3 = [p_H3[0][event_iterator], p_H3[1][event_iterator], p_H3[2][event_iterator] ]
         resonance = find_resonance(p1, p2, p3 , is_kaon=kaon_place, charge=charges)
+        if resonance[0] in range(D_min, D_max):
+            continue
         two_body_resonance_array = np.append(two_body_resonance_array, [resonance], axis=0)
 
     two_body_resonance_array = np.delete(two_body_resonance_array, 0, axis=0)
