@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.optimize import curve_fit
-
+from src.distributions import *
 
 
 # decaying exponential function
