@@ -7,20 +7,23 @@ def get_bins(data, values):
     bin_centers = [(a+b)/2 for a,b in zip(data[0:-1],data[1:]) ]
     return bin_centers
 
-def get_bins_values(mode="B+", BINS=100, x_min=5100, x_max=5800,
+def get_bins_values(mode="B+", BINS=100, x_min=5100, x_max=5800, array=None,
                     path_name='/workspaces/labs_yr3/matter_antimatter/data/inv_mass.csv'):
 
-    if mode == "B+":
-        dataset = np.genfromtxt('/workspaces/labs_yr3/matter_antimatter/data/inv_mass_positive.csv', delimiter=',')
-    elif mode == "B-":
-        dataset = np.genfromtxt('/workspaces/labs_yr3/matter_antimatter/data/inv_mass_negative.csv', delimiter=',')
-
+    if array.any() != None:
+        dataset = array
     else:
-        try:
-            dataset = np.genfromtxt(path_name, delimiter=',')
-        except:
-            print("No file found")
-            return 0, 0, 0, 0
+        if mode == "B+":
+            dataset = np.genfromtxt('/workspaces/labs_yr3/matter_antimatter/data/inv_mass_positive.csv', delimiter=',')
+        elif mode == "B-":
+            dataset = np.genfromtxt('/workspaces/labs_yr3/matter_antimatter/data/inv_mass_negative.csv', delimiter=',')
+
+        else:
+            try:
+                dataset = np.genfromtxt(path_name, delimiter=',')
+            except:
+                print("No file found")
+                return 0, 0, 0, 0
     #x_data = np.linspace(x_min, x_max, BINS)
     invariant_mass_numpy = np.array(dataset)
     invariant_mass_numpy = np.where((
