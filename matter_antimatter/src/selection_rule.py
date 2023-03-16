@@ -2,10 +2,11 @@ import numpy as np
 
 
 #(pion_prob, kaon_prob)
-def is_pion(probabilities, pimin=0.5):
+def is_pion(probabilities, pimin=0.5, kmax=0.45):
 
     if probabilities[0] > pimin:
-        return True
+        if probabilities[1] < kmax:
+            return True
     return False
 
 def is_kaon(probabilities, kmin=0.6, pimax=0.4):
