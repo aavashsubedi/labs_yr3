@@ -5,7 +5,11 @@ import numpy as np
 
 def get_bins(data, values):
     bin_centers = [(a+b)/2 for a,b in zip(data[0:-1],data[1:]) ]
-    return bin_centers
+    bin_widths = [(b-a) for a,b in zip(data[0:-1], data[1:])]
+    
+    uncertainties = np.sqrt(values)
+    print (uncertainties)
+    return bin_centers, uncertainties
 
 def get_bins_values(mode="B+", BINS=100, x_min=5100, x_max=5800, array=None,
                     path_name='/workspaces/labs_yr3/matter_antimatter/data/inv_mass.csv'):
