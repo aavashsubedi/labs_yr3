@@ -14,8 +14,8 @@ def half_gaussian(x, norm, mean, sigma):
 
 def fit_func(x, norm, mean, sigma):
     return np.array( gaussian(x, norm, mean, sigma) )
-def fit_func_triple(x, norm1, mean1, sigma1, norm2, mean2, sigma2, normE, decayE):
-    return np.array(gaussian(x, norm1, mean1, sigma1) + gaussian(x, norm2, mean2, sigma2)  + exponential(x, normE, decayE))
+def fit_func_triple(x, norm1, mean1, sigma1, norm2, mean2, sigma2, normE, decayE, offsetE):
+    return np.array(gaussian(x, norm1, mean1, sigma1) + gaussian(x, norm2, mean2, sigma2)  + exponential(x, normE, decayE, offsetE))
 
 def fit_func_quad(x, norm1, mean1, sigma1, norm2, mean2, sigma2, normE, decayE, constant):
     return np.array(gaussian(x, norm1, mean1, sigma1) + gaussian(x, norm2, mean2, sigma2) + exponential(x, normE, decayE) + constant(x, constant))

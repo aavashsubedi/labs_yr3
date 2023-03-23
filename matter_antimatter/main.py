@@ -18,6 +18,8 @@ from src.distributions import fit_func_half
 from src.distributions import exponential
 from src.distributions import gaussian
 from src.distributions import half_gaussian
+from src.dalitz_plots import dalitz_plot
+from src.fitting_inv_mass import attempt_fit
 
 
 
@@ -83,21 +85,14 @@ def main():
     plt.show()
     """
 
-    data_Bminus = np.genfromtxt("data/inv_mass_filtered_all_Bminus.csv", delimiter =' ')
-    values, bins, patches = plt.hist(data_Bminus, bins=200, range=[5100, 5600])
-    x_values, unc = get_bins(bins, values)
-    plt.errorbar(x_values, values, unc, ls='None')
+
+
+    #data = np.genfromtxt("data/two_body_resonance_filtered_all_Bplus.csv", delimiter=' ')
+    #dalitz_plot(data[:, 0], data[:, 1])
+
+    data = np.genfromtxt("data/inv_mass_filtered_all_Bminus.csv")
+    attempt_fit(data)
     
-
-    popt, pcov = curve_fit(fit_func_half, x_values, values, p0=[1000, 5100, 50, 1000, 5280, 50, 1000, 1000, 10])
-
-    plt.plot(x_values, fit_func_half(x_values, *popt))
-    plt.plot(x_values, exponential(x_values, popt[6], popt[7], popt[8]))
-    plt.plot(x_values, gaussian(x_values, popt[3], popt[4], popt[5]))
-    plt.plot(x_values, half_gaussian(x_values, popt[0], popt[1], popt[2]))
-
-    print(popt)
-    plt.show()
     
     #np.savetxt("data/two_body_resonance_filtered.csv", new_two_body, delimiter=',')
     
