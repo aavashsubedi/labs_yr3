@@ -26,7 +26,7 @@ for i in range(1, 4):
 
 def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_keys,
               selection=False, output="", interest=None):
-    #if interest == "B_plus" or interest == "B_minus" then we apply the selection rule
+    #if interest == "B+" or interest == "B+" then we apply the selection rule
 
     if not path_name:
         path = 'data/'  # set this to '' to run on the GitHub version

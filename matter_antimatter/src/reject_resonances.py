@@ -50,7 +50,7 @@ def iterate_reject(inv_mass_3body=None, two_body_masses=[[], []], mev_per_bin=17
     popt, x_kpi, x_pipi, y_kpi, y_pipi, limits_kpi, limits_pipi, unc = fit_resonances(two_body_masses, mev_per_bin=mev_per_bin, sigma=sigma)
     mass_pipi = two_body_masses[:, 1]
     mass_kpi = two_body_masses[:, 0]
-    print(limits_kpi)
+    #print(limits_kpi)
     print("Iterating and rejecting D0 and J/psi events:")
     for event_iterator in tqdm(range(0, len(mass_kpi))):
         if mass_kpi[event_iterator] > limits_kpi[0] and mass_kpi[event_iterator] < limits_kpi[1]:
