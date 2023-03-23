@@ -237,9 +237,28 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
     is_kaon = [is_kaon_H1, is_kaon_H2, is_kaon_H3]
     
 
+    #result = np.array([pT]).T
+    #result = np.append(result, np.array([p_H1]).T, axis=1)
+    #result = np.append(result, np.array([p_H2]).T, axis=1)
+    #result = np.append(result, np.array([p_H3]).T, axis=1)
+    #result = np.append(result, np.array([h1_probpi]).T, axis=1)
+    #result = np.append(result, np.array([h1_probk]).T, axis=1)
+    #result = np.append(result, np.array([h2_probpi]).T, axis=1)
+    #result = np.append(result, np.array([h2_probk]).T, axis=1)
+    #result = np.append(result, np.array([h3_probpi]).T, axis=1)
+    #result = np.append(result, np.array([h3_probk]).T, axis=1)
+    #result = np.append(result, np.array([invariant_mass_array]).T, axis=1)
+    #result = np.append(result, np.array([is_kaon_H1]).T, axis=1)
+    #result = np.append(result, np.array([is_kaon_H2]).T, axis=1)
+    #result = np.append(result, np.array([is_kaon_H3]).T, axis=1)
+    #result = np.append(result, np.array([charge_H1]).T, axis=1)
+    #result = np.append(result, np.array([charge_H2]).T, axis=1)
+    #result = np.append(result, np.array([charge_H3]).T, axis=1)
+    #print(np.shape(result))
 
     return [pT, p_H1, p_H2, p_H3, (h1_probpi, h1_probk), (h2_probpi, h2_probk), (h3_probpi, h3_probk), (master_probpi, master_probk),
             invariant_mass_array, is_kaon, charge_H1, charge_H2, charge_H3]
+    
 
 
 if __name__ == "__main__":

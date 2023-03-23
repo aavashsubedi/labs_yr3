@@ -3,6 +3,27 @@ from src.invariant_mass import inv_mass_2body
 from tqdm import tqdm
 
 
+def append_args(iterator, args, args_new):
+    """_summary_
+
+    Parameters
+    ----------
+    iterator : int
+        event to be added to new array
+    args : list [][]
+        all arguments returned by file reading unpacked
+    args_new : ndarray
+        numpy array with every row separate event
+    """
+    new_row = np.array([])
+    print(new_row)
+    for i in range(0, len(args)):
+        new_row = np.append(new_row, args[i][iterator])
+    args_new = np.append(args_new, [new_row], axis=0)
+    return args_new
+    
+
+
 def find_resonance(momentum_1=[0, 0, 0],
                    momentum_2=[0, 0, 0],
                    momentum_3=[0, 0, 0],
@@ -63,15 +84,18 @@ def find_resonance(momentum_1=[0, 0, 0],
             
     return inv_mass
 
-def iterate_events(pT, p_H1, p_H2, p_H3, h1_prob, h2_prob, h3_prob, master_prob, invariant_mass_array, is_kaon, charge_H1, charge_H2, charge_H3):
+def iterate_events(args):
     """_summary_
 
     Parameters
     ----------
-    *args : same as outputted by the file reading
+    args : same as outputted by the file reading
     """
-    xmin, xmax = (5235, 5333)
-    D_min, D_max = (1800, 1900)
+    pT, p_H1, p_H2, p_H3, h1_prob, h2_prob, h3_prob, master_prob, invariant_mass_array, is_kaon, charge_H1, charge_H2, charge_H3 = args
+    new_inv_mass = []
+    
+    xmin, xmax = (5235, 5333)   #functional optimisation
+    
 
     two_body_resonance_array = np.array([[-1, -1]])
     
@@ -81,18 +105,20 @@ def iterate_events(pT, p_H1, p_H2, p_H3, h1_prob, h2_prob, h3_prob, master_prob,
         if invariant_mass_array[event_iterator] < xmin or invariant_mass_array[event_iterator] > xmax:
             continue
         
+        
         kaon_place = [is_kaon[0][event_iterator], is_kaon[1][event_iterator], is_kaon[2][event_iterator]]
         charges = [charge_H1[event_iterator], charge_H2[event_iterator], charge_H3[event_iterator]]
         p1 = [p_H1[0][event_iterator], p_H1[1][event_iterator], p_H1[2][event_iterator] ]
         p2 = [p_H2[0][event_iterator], p_H2[1][event_iterator], p_H2[2][event_iterator] ]
         p3 = [p_H3[0][event_iterator], p_H3[1][event_iterator], p_H3[2][event_iterator] ]
         resonance = find_resonance(p1, p2, p3 , is_kaon=kaon_place, charge=charges)
-        if resonance[0] in range(D_min, D_max):
-            continue
+        
         two_body_resonance_array = np.append(two_body_resonance_array, [resonance], axis=0)
+        new_inv_mass.append(invariant_mass_array[event_iterator])
+        #new_args = append_args(event_iterator, args, new_args)
 
     two_body_resonance_array = np.delete(two_body_resonance_array, 0, axis=0)
-    return two_body_resonance_array
+    return  two_body_resonance_array, new_inv_mass
             
 
 
