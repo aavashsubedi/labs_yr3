@@ -3,7 +3,7 @@ import numpy as np
 
 
 
-def get_bins(data, values):
+def get_bins(data, values=0):
     bin_centers = [(a+b)/2 for a,b in zip(data[0:-1],data[1:]) ]
     bin_widths = [(b-a) for a,b in zip(data[0:-1], data[1:])]
     

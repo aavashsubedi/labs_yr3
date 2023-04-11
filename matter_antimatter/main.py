@@ -18,8 +18,13 @@ from src.distributions import fit_func_half
 from src.distributions import exponential
 from src.distributions import gaussian
 from src.distributions import half_gaussian
+from src.dalitz_plots import variable_bins
 from src.dalitz_plots import dalitz_plot
 from src.fitting_inv_mass import attempt_fit
+from utils.histogram import convert_2d_hist
+
+from matplotlib import ticker, cm
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
 
@@ -86,12 +91,45 @@ def main():
     """
 
 
+    x_resolution = 500
+    y_resolution = 100
 
-    #data = np.genfromtxt("data/two_body_resonance_filtered_all_Bplus.csv", delimiter=' ')
-    #dalitz_plot(data[:, 0], data[:, 1])
 
-    data = np.genfromtxt("data/inv_mass_filtered_all_Bminus.csv")
-    attempt_fit(data)
+    data = np.genfromtxt("data/two_body_resonance_filtered_all_Bplus.csv", delimiter=' ')
+    dalitz_values, dalitz_x_bins, dalitz_y_bins = dalitz_plot(data[:, 0], data[:, 1], bins=[x_resolution,y_resolution])
+    values, bins_x, bins_y = variable_bins(data[:, 0], data[:, 1], resolution_x=x_resolution, resolution_y=y_resolution)
+    hist_values, hist_x, hist_y = convert_2d_hist(values[1:], bins_x[1:], bins_y, x_resolution=x_resolution)
+    #plt.hist2d(hist_values, bins=[hist_x, hist_y])
+
+    dalitz_x, unc = get_bins(dalitz_x_bins)
+    dalitz_y, unc = get_bins(dalitz_y_bins)
+    hist_y, unc = get_bins(hist_y)
+    
+
+    """
+    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(20, 6))
+    fig.subplots_adjust(wspace=0.3) # increase horizontal space between plot
+    
+    
+    ax[0].contourf(dalitz_x, dalitz_y, dalitz_values, locator=ticker.LogLocator())
+    ax[1].contourf(hist_x, hist_y, hist_values)
+    #fig.colorbar(ax[0])
+    """
+    plt.contourf(dalitz_x, dalitz_y, dalitz_values)
+    plt.show()
+    plt.contourf(hist_x, hist_y, hist_values)
+    plt.colorbar()
+    plt.show()
+
+
+
+
+
+
+    #print(values)
+
+    #data = np.genfromtxt("data/inv_mass_filtered_all_Bminus.csv")
+    #attempt_fit(data)
     
     
     #np.savetxt("data/two_body_resonance_filtered.csv", new_two_body, delimiter=',')
