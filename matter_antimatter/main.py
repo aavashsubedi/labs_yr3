@@ -91,13 +91,13 @@ def main():
     """
 
 
-    x_resolution = 500
-    y_resolution = 100
+    x_resolution = 1000
+    y_resolution = 50
 
 
     data = np.genfromtxt("data/two_body_resonance_filtered_all_Bplus.csv", delimiter=' ')
-    dalitz_values, dalitz_x_bins, dalitz_y_bins = dalitz_plot(data[:, 0], data[:, 1], bins=[x_resolution,y_resolution])
-    values, bins_x, bins_y = variable_bins(data[:, 0], data[:, 1], resolution_x=x_resolution, resolution_y=y_resolution)
+    dalitz_values, dalitz_x_bins, dalitz_y_bins = dalitz_plot(data[:, 1], data[:, 0], bins=[x_resolution,y_resolution])
+    values, bins_x, bins_y = variable_bins(data[:, 1], data[:, 0], resolution_x=x_resolution, resolution_y=y_resolution)
     hist_values, hist_x, hist_y = convert_2d_hist(values[1:], bins_x[1:], bins_y, x_resolution=x_resolution)
     #plt.hist2d(hist_values, bins=[hist_x, hist_y])
 
@@ -119,6 +119,7 @@ def main():
     plt.show()
     plt.contourf(hist_x, hist_y, hist_values)
     plt.colorbar()
+    plt.savefig("plots/variable_bin_width_values_1000x50.png", dpi=1200)
     plt.show()
 
 
