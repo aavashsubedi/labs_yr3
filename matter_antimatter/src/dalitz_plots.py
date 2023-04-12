@@ -54,7 +54,7 @@ def variable_bins(x_values, y_values, resolution_x=200, resolution_y=30, toleran
                 row_counts += values[row, column] #Debugging, see total counts on each row
 
 
-                if column >= index_max:
+                if column >= index_max - 1:
                     #Dumping the last bin as it is not full
                     new_x_bin_edge = x_bins_edges[column + 1]
                     #new_x_bins_edges_row.append(new_x_bin_edge)

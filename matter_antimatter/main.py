@@ -22,6 +22,8 @@ from src.dalitz_plots import variable_bins
 from src.dalitz_plots import dalitz_plot
 from src.fitting_inv_mass import attempt_fit
 from utils.histogram import convert_2d_hist
+from src.local_asymmetry import get_Bplus_Bminus
+from utils.histogram import plot2d
 
 from matplotlib import ticker, cm
 from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -91,11 +93,13 @@ def main():
     """
 
 
-    x_resolution = 1000
-    y_resolution = 50
+    x_resolution = 200
+    y_resolution = 20
 
 
-    data = np.genfromtxt("data/two_body_resonance_filtered_all_Bplus.csv", delimiter=' ')
+    data1 = np.genfromtxt("data/two_body_resonance_filtered_all_Bplus.csv", delimiter=' ')
+    data2 = np.genfromtxt("data/two_body_resonance_filtered_all_Bminus.csv", delimiter=' ')
+    data = np.append(data1, data2, axis=0)
     dalitz_values, dalitz_x_bins, dalitz_y_bins = dalitz_plot(data[:, 1], data[:, 0], bins=[x_resolution,y_resolution])
     values, bins_x, bins_y = variable_bins(data[:, 1], data[:, 0], resolution_x=x_resolution, resolution_y=y_resolution)
     hist_values, hist_x, hist_y = convert_2d_hist(values[1:], bins_x[1:], bins_y, x_resolution=x_resolution)
@@ -103,7 +107,7 @@ def main():
 
     dalitz_x, unc = get_bins(dalitz_x_bins)
     dalitz_y, unc = get_bins(dalitz_y_bins)
-    hist_y, unc = get_bins(hist_y)
+    #hist_y, unc = get_bins(hist_y)
     
 
     """
@@ -115,12 +119,17 @@ def main():
     ax[1].contourf(hist_x, hist_y, hist_values)
     #fig.colorbar(ax[0])
     """
-    plt.contourf(dalitz_x, dalitz_y, dalitz_values)
+    #plt.contourf(dalitz_x, dalitz_y, dalitz_values)
+    #plt.show()
+    #plt.contourf(hist_x, hist_y, hist_values)
+    #plt.colorbar()
+    #plt.savefig("plots/variable_bin_width_values_1000x50.png", dpi=1200)
+    #plt.show()
     plt.show()
-    plt.contourf(hist_x, hist_y, hist_values)
-    plt.colorbar()
-    plt.savefig("plots/variable_bin_width_values_1000x50.png", dpi=1200)
+    plot2d(hist_values, hist_x, hist_y)
     plt.show()
+
+    get_Bplus_Bminus(data1, data2, bins_x, bins_y, x_resolution, y_resolution)
 
 
 
