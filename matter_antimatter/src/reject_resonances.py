@@ -42,12 +42,31 @@ def fit_resonances(inv_mass = [[], []], mev_per_bin=17, sigma=2):
     return (popt, popt_pipi), bin_centres, bin_centres_pipi, values, values_pipi, (lower_kpi, upper_kpi), (lower_pipi, upper_pipi), (unc_kpi, unc_pipi)
 
 
-def iterate_reject(inv_mass_3body=None, two_body_masses=[[], []], mev_per_bin=17, sigma=2):
+def iterate_reject(inv_mass_3body, two_body_masses=[[], []], two_body_signal=[[], []], mev_per_bin=17, sigma=2):
+    """fits the two body resonances on the signal only and rejects around 2 sigma on all data
 
+    Parameters
+    ----------
+    inv_mass_3body : array float
+        all data invariant mass
+    two_body_masses : list, optional
+        all data resonance, by default [[], []]
+    two_body_signal : list, optional
+        signal only resonance for fitting, by default [[], []]
+    mev_per_bin : int, optional
+        resolution in MeV per bin, by default 17
+    sigma : int, optional
+        cutoff standard deviation, by default 2
+
+    Returns
+    -------
+    list, list
+        filtered inv masses and two body resonances of all data
+    """
     new_inv_mass = []
     new_two_body = [[-1, -1]]
 
-    popt, x_kpi, x_pipi, y_kpi, y_pipi, limits_kpi, limits_pipi, unc = fit_resonances(two_body_masses, mev_per_bin=mev_per_bin, sigma=sigma)
+    popt, x_kpi, x_pipi, y_kpi, y_pipi, limits_kpi, limits_pipi, unc = fit_resonances(two_body_signal, mev_per_bin=mev_per_bin, sigma=sigma)
     mass_pipi = two_body_masses[:, 1]
     mass_kpi = two_body_masses[:, 0]
     #print(limits_kpi)

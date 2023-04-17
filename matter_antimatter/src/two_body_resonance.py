@@ -84,17 +84,21 @@ def find_resonance(momentum_1=[0, 0, 0],
             
     return inv_mass
 
-def iterate_events(args):
-    """_summary_
+def iterate_events(x_limits=[5235, 5333], *args):
+    """Iterates all events and calculates resonance invariant mass.  Also can pick events from 
+       certain range only 
 
     Parameters
     ----------
+    x_limits : [float, float]
+    range of inv mass values to be considered. Defaults are [5235, 5333] from functional optimisation
+
     args : same as outputted by the file reading
     """
     pT, p_H1, p_H2, p_H3, h1_prob, h2_prob, h3_prob, master_prob, invariant_mass_array, is_kaon, charge_H1, charge_H2, charge_H3 = args
     new_inv_mass = []
     
-    xmin, xmax = (5235, 5333)   #functional optimisation
+    xmin, xmax = x_limits   
     
 
     two_body_resonance_array = np.array([[-1, -1]])

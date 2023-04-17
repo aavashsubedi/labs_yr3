@@ -93,8 +93,8 @@ def main():
     """
 
 
-    x_resolution = 200
-    y_resolution = 20
+    x_resolution = 150
+    y_resolution = 50
 
 
     data1 = np.genfromtxt("data/two_body_resonance_filtered_all_Bplus.csv", delimiter=' ')
@@ -126,8 +126,8 @@ def main():
     #plt.savefig("plots/variable_bin_width_values_1000x50.png", dpi=1200)
     #plt.show()
     plt.show()
-    plot2d(hist_values, hist_x, hist_y)
-    plt.show()
+    #plot2d(hist_values, hist_x, hist_y)
+    #plt.show()
 
     get_Bplus_Bminus(data1, data2, bins_x, bins_y, x_resolution, y_resolution)
 

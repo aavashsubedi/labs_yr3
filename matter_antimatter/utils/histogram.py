@@ -79,16 +79,20 @@ def use_histogram_frame(values, x_bins_edges, y_bins_edges, x_resolution=200, y_
     converted_values = np.delete(converted_values, 0, axis=0)
     return converted_values, histogram_frame, y_bins_edges
 
-def plot_frame(x_bins_edges, y_bins_edges, x_resolution=200, limits_x=[0, 20]):
+def plot_frame(x_bins_edges, y_bins_edges, x_resolution=200, limits_x=[0, 20], ax=None):
+
+    if ax==None:
+        ax = plt.gca() # get current axes
+
     histogram_frame = np.linspace(limits_x[0], limits_x[1], x_resolution, endpoint=True)
     for row in range(0, len(y_bins_edges) - 1):
         
-        plt.plot([x_bins_edges[row][0], x_bins_edges[row][-1]], [y_bins_edges[row + 1], y_bins_edges[row + 1]], color='r', ls='--', lw='0.5')
-        plt.plot([x_bins_edges[row][0], x_bins_edges[row][0]], [y_bins_edges[row], y_bins_edges[row + 1]], color='r', ls='-', lw='0.5')
+        ax.plot([x_bins_edges[row][0], x_bins_edges[row][-1]], [y_bins_edges[row + 1], y_bins_edges[row + 1]], color='r', ls='--', lw='0.5')
+        ax.plot([x_bins_edges[row][0], x_bins_edges[row][0]], [y_bins_edges[row], y_bins_edges[row + 1]], color='r', ls='-', lw='0.5')
         for column in range(0, len(x_bins_edges[row]) - 1):
             for iterator in range(0, len(histogram_frame)):
                 if histogram_frame[iterator] >= x_bins_edges[row][column + 1]:
-                    plt.plot([x_bins_edges[row][column + 1], x_bins_edges[row][column + 1]], [y_bins_edges[row], y_bins_edges[row + 1]], color='r', ls='-', lw='0.5')
+                    ax.plot([x_bins_edges[row][column + 1], x_bins_edges[row][column + 1]], [y_bins_edges[row], y_bins_edges[row + 1]], color='r', ls='-', lw='0.5')
                     break
 
 
@@ -102,4 +106,4 @@ def plot2d(h, xbins, ybins, ax=None, **plot_kwargs):
     ax.yaxis.set_ticks_position('left')
     
 
-    return ax
+    return ax, image
