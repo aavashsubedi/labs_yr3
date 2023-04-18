@@ -2,28 +2,17 @@ import uproot
 import numpy as np
 import matplotlib.pylab as plt
 import matplotlib.colors as colors
-from scipy.optimize import curve_fit
+
 # import file_reading from src file 
-from src.file_reading import read_file
-from src.fitting_functions import fit_data
-from utils.printing_results import print_results
-from utils.plotting_functions import default_plot
-from src.Task1_plot_prob import plotting_histograms_probability
-from src.two_body_resonance import iterate_events
-from src.reject_resonances import fit_resonances
-from src.distributions import lifted_gaussian
-from src.reject_resonances import iterate_reject
+
 from src.binning_files import get_bins
-from src.distributions import fit_func_half
-from src.distributions import exponential
-from src.distributions import gaussian
-from src.distributions import half_gaussian
+
 from src.dalitz_plots import variable_bins
-from src.dalitz_plots import dalitz_plot
-from src.fitting_inv_mass import attempt_fit
+
 from utils.histogram import convert_2d_hist
 from src.local_asymmetry import get_Bplus_Bminus
 from utils.histogram import plot2d
+from src.dalitz_plots import subtract_background
 
 from matplotlib import ticker, cm
 from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -93,15 +82,19 @@ def main():
     """
 
 
-    x_resolution = 150
-    y_resolution = 50
+    x_resolution = 300
+    y_resolution = 15
 
 
-    data1 = np.genfromtxt("data/two_body_resonance_filtered_all_Bplus.csv", delimiter=' ')
-    data2 = np.genfromtxt("data/two_body_resonance_filtered_all_Bminus.csv", delimiter=' ')
+    data1 = np.genfromtxt("data/two_body_resonance_filtered_Bplus.csv", delimiter=',')
+    data2 = np.genfromtxt("data/two_body_resonance_filtered_Bminus.csv", delimiter=',')
+    inv_mass1 = np.genfromtxt("data/inv_mass_filtered_Bplus.csv", delimiter=',')
+    inv_mass2 = np.genfromtxt("data/inv_mass_filtered_Bminus.csv", delimiter=',')
     data = np.append(data1, data2, axis=0)
-    dalitz_values, dalitz_x_bins, dalitz_y_bins = dalitz_plot(data[:, 1], data[:, 0], bins=[x_resolution,y_resolution])
-    values, bins_x, bins_y = variable_bins(data[:, 1], data[:, 0], resolution_x=x_resolution, resolution_y=y_resolution)
+    inv_mass = np.append(inv_mass1, inv_mass2)
+    popt_exp=[1.69e+6, 5.3e+3, 1.7e+3]
+    dalitz_values, dalitz_x_bins, dalitz_y_bins = subtract_background(popt=popt_exp, inv_mass_all=inv_mass, two_body_all=data, bins=[x_resolution,y_resolution], transpose=True)
+    values, bins_x, bins_y = variable_bins(dalitz_values, dalitz_x_bins, dalitz_y_bins, resolution_x=x_resolution, resolution_y=y_resolution)
     hist_values, hist_x, hist_y = convert_2d_hist(values[1:], bins_x[1:], bins_y, x_resolution=x_resolution)
     #plt.hist2d(hist_values, bins=[hist_x, hist_y])
 
@@ -125,8 +118,9 @@ def main():
     #plt.colorbar()
     #plt.savefig("plots/variable_bin_width_values_1000x50.png", dpi=1200)
     #plt.show()
+    plot2d(hist_values, hist_x, hist_y)
     plt.show()
-    #plot2d(hist_values, hist_x, hist_y)
+    
     #plt.show()
 
     get_Bplus_Bminus(data1, data2, bins_x, bins_y, x_resolution, y_resolution)

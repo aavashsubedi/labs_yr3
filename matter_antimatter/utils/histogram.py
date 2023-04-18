@@ -1,6 +1,25 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from src.dalitz_plots import dalitz_plot
+
+
+
+def dalitz_plot(resonance_kpi, resonance_pipi, bins=30):
+    kpi_squared = resonance_kpi**2
+    pipi_squared = resonance_pipi**2
+
+    #to GeV
+    kpi_squared /= 10**6
+    pipi_squared /= 10**6    
+
+    
+
+    values, x_bin_edges, y_bin_edges, image = plt.hist2d(kpi_squared, pipi_squared, bins=bins, range=[[0, 20], [0, 20]])
+    plt.clf()
+    #plt.colorbar()
+    values = np.array(values).T
+    #plt.show()
+    return values, x_bin_edges, y_bin_edges
+
 
 def convert_2d_hist(values, x_bins_edges, y_bins_edges, x_resolution=200, limits_x=[0, 20]):
 
@@ -101,7 +120,7 @@ def plot2d(h, xbins, ybins, ax=None, **plot_kwargs):
     if ax==None:
         ax = plt.gca() # get current axes
     
-    image = ax.matshow(h, extent=[xbins[0], xbins[-1], ybins[0], ybins[-1]], aspect='auto', origin='lower', **plot_kwargs)
+    image = ax.matshow(h.transpose(), extent=[xbins[0], xbins[-1], ybins[0], ybins[-1]], aspect='auto', origin='lower', **plot_kwargs)
     ax.xaxis.set_ticks_position('bottom')
     ax.yaxis.set_ticks_position('left')
     

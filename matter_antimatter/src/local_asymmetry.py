@@ -34,12 +34,13 @@ def local_asymmetry( Bplus_data = [], Bminus_data = [], x_resolution=200, y_reso
 
     #sigma_asymmetry =  np.sqrt( (sigma_sum * difference)**2 + (sigma_sum / sum)**2 )
     sigma_asymmetry = np.sqrt( (1 - asymmetry**2) / sum )
+    #sigma_asymmetry = np.sqrt((np.square(asymmetry) + np.square(np.square(asymmetry))) / sum) 
     sigma_asymmetry = np.where(np.isinf(sigma_asymmetry), np.full(np.shape(sigma_asymmetry), np.nan), sigma_asymmetry)
     sigma_asymmetry = np.where(np.isnan(sigma_asymmetry), np.full(np.shape(sigma_asymmetry), np.nan), sigma_asymmetry)
     print(np.min(sigma_asymmetry))
 
-    significance = np.abs(asymmetry/sigma_asymmetry)
-    significance = np.where(significance > 5, significance, np.full(np.shape(significance), np.nan)) #cut siginificant only
+    significance = (asymmetry/sigma_asymmetry)
+    #significance = np.where(significance > 5 , significance, np.full(np.shape(significance), np.nan)) #cut siginificant only
     
     #plt.contourf(x_centres_Bplus, y_centres_Bplus, asymmetry, levels=[-1.0, -0.75, -0.5, -0.25, -0.1, 0, 0.1, 0.25, 0.5, 0.75, 1.0], corner_mask=False)
     #plt.hist2d(x_centres_Bplus, y_centres_Bplus, bins=[x_resolution, y_resolution], weights=asymmetry)
@@ -83,5 +84,5 @@ def get_Bplus_Bminus(data_Bplus, data_Bminus, x_bins_edges, y_bins_edges,x_resol
     fig.colorbar(image2, cax=None, ax=ax[1])
     fig.colorbar(image3, cax=None, ax=ax[2])
     ax[0].set_xlabel("a")
-    fig.savefig("plots/local_asymmetry_150x15.png")
+    fig.savefig("plots/local_asymmetry_100x30.png")
     plt.show()
