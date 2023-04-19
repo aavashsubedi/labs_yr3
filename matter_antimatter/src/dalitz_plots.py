@@ -121,7 +121,7 @@ def crop_row(x_values, x_bins_edges, treshold=1):
     return x_min, x_max, iterator, len(x_values) - iterator_inverse
 
 
-def subtract_background(popt=[], signal_limits=[5235, 5333], combinatorial_limits=[5400, 5600], inv_mass_all=[], two_body_all=[], bins=[30, 30], transpose=False):
+def subtract_background(popt=[], signal_limits=[5235, 5333], combinatorial_limits=[5400, 5600], inv_mass_all=[], two_body_all=[], bins=[30, 30], transpose=False, limits=[0, 27]):
     #find ratio of the exponential integrals in signal and combinatorial regions
     signal_x_values = np.linspace(signal_limits[0], signal_limits[1], 1000)
     combinatorial_x_values = np.linspace(combinatorial_limits[0], combinatorial_limits[1], 1000)
@@ -164,13 +164,13 @@ def subtract_background(popt=[], signal_limits=[5235, 5333], combinatorial_limit
 
     fig, ax = plt.subplots(nrows=1, ncols=3, figsize=(20, 6))
     fig.subplots_adjust(wspace=0.3) # increase horizontal space between plots
-    image1 = ax[0].hist2d(np.square(column1_s / 10**3), np.square(column2_s / 10**3), bins=bins)
+    image1 = ax[0].hist2d(np.square(column1_s / 10**3), np.square(column2_s / 10**3), bins=bins, range=[limits, limits])
     ax[0].set_xlabel("$K \pi$")
     ax[0].set_ylabel("$\pi \pi$")
     ax[0].set_title("Dalitz plot of signal peak")
     fig.colorbar(image1[3], cax=None, ax=ax[0])
 
-    image2 = ax[1].hist2d(np.square(column1_c / 10**3), np.square(column2_c / 10**3), bins=bins)
+    image2 = ax[1].hist2d(np.square(column1_c / 10**3), np.square(column2_c / 10**3), bins=bins, range=[limits, limits])
     ax[1].set_xlabel("$K \pi$")
     ax[1].set_ylabel("$\pi \pi$")
     ax[1].set_title("Dalitz plot of combinatorial region")

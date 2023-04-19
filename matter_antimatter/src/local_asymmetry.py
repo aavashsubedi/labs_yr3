@@ -10,13 +10,15 @@ def local_asymmetry( Bplus_data = [], Bminus_data = [], x_resolution=200, y_reso
     x_centres_Bplus, y_centres_Bplus, weigths_Bplus = Bplus_data
     x_centres_Bminus, y_centres_Bminus, weigths_Bminus = Bminus_data
 
+    print(weigths_Bplus[10, 20], weigths_Bminus[10, 20])
+
     all_events = np.sum(weigths_Bplus) + np.sum(weigths_Bminus)
 
     
 
     asymmetry = (weigths_Bminus - weigths_Bplus) / (weigths_Bplus + weigths_Bminus)
     asymmetry = np.where(np.isnan(asymmetry), np.full(np.shape(asymmetry), np.nan), asymmetry)
-    #print(np.max(weigths_Bplus))
+    print(asymmetry[10, 20])
 
     sum = (weigths_Bplus + weigths_Bminus)
     difference = (weigths_Bminus - weigths_Bplus)
@@ -37,7 +39,7 @@ def local_asymmetry( Bplus_data = [], Bminus_data = [], x_resolution=200, y_reso
     #sigma_asymmetry = np.sqrt((np.square(asymmetry) + np.square(np.square(asymmetry))) / sum) 
     sigma_asymmetry = np.where(np.isinf(sigma_asymmetry), np.full(np.shape(sigma_asymmetry), np.nan), sigma_asymmetry)
     sigma_asymmetry = np.where(np.isnan(sigma_asymmetry), np.full(np.shape(sigma_asymmetry), np.nan), sigma_asymmetry)
-    print(np.min(sigma_asymmetry))
+    print(sigma_asymmetry[10, 20])
 
     significance = (asymmetry/sigma_asymmetry)
     #significance = np.where(significance > 5 , significance, np.full(np.shape(significance), np.nan)) #cut siginificant only
@@ -70,7 +72,7 @@ def get_Bplus_Bminus(data_Bplus, data_Bminus, x_bins_edges, y_bins_edges,x_resol
     y_centres_Bminus, unc_Bminus = get_bins(y_bins_Bminus, new_values_Bminus)
 
     
-    plt.show()
+    
     fig, ax = plt.subplots(nrows=1, ncols=3, figsize=(20, 6))
     fig.subplots_adjust(wspace=0.3) # increase horizontal space between plots
     #plot_frame(x_bins_edges[1:], y_bins_edges[1:], x_resolution, limits_x, ax[0])

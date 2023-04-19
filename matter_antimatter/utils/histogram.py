@@ -3,7 +3,7 @@ import numpy as np
 
 
 
-def dalitz_plot(resonance_kpi, resonance_pipi, bins=30):
+def dalitz_plot(resonance_kpi, resonance_pipi, bins=30, limits=[0, 27]):
     kpi_squared = resonance_kpi**2
     pipi_squared = resonance_pipi**2
 
@@ -13,7 +13,7 @@ def dalitz_plot(resonance_kpi, resonance_pipi, bins=30):
 
     
 
-    values, x_bin_edges, y_bin_edges, image = plt.hist2d(kpi_squared, pipi_squared, bins=bins, range=[[0, 20], [0, 20]])
+    values, x_bin_edges, y_bin_edges, image = plt.hist2d(kpi_squared, pipi_squared, bins=bins, range=[limits, limits])
     plt.clf()
     #plt.colorbar()
     values = np.array(values).T
@@ -58,13 +58,13 @@ def convert_2d_hist(values, x_bins_edges, y_bins_edges, x_resolution=200, limits
 
 def use_histogram_frame(values, x_bins_edges, y_bins_edges, x_resolution=200, y_resolution=50, limits_x=[0, 20]):
 
-    hist_values, hist_bins_x, hist_bins_y = dalitz_plot(values[:, 1], values[:, 0], bins=[x_resolution, y_resolution])
+    hist_values, hist_bins_x, hist_bins_y = dalitz_plot(values[:, 1], values[:, 0], bins=[x_resolution, y_resolution], limits=limits_x)
     histogram_frame = np.linspace(limits_x[0], limits_x[1], x_resolution, endpoint=True)
     converted_values = [np.full(x_resolution, -1)]
     
     
 
-    print(np.max(hist_values))
+    #print(np.max(hist_values))
 
     for row in range(0, len(y_bins_edges) - 1):
         #plt.plot([x_bins_edges[row][0], x_bins_edges[row][-1]], [y_bins_edges[row + 1], y_bins_edges[row + 1]], color='r', ls='--', lw='0.5')
@@ -81,7 +81,7 @@ def use_histogram_frame(values, x_bins_edges, y_bins_edges, x_resolution=200, y_
                     #plt.plot([x_bins_edges[row][column + 1], x_bins_edges[row][column + 1]], [y_bins_edges[row], y_bins_edges[row + 1]], color='r', ls='-', lw='0.5')
                     break
                     
-                
+            print(column_value)    
             row_values.append(column_value)
         
         for second_column in range(0, len(x_bins_edges[row]) - 1):

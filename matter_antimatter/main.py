@@ -84,6 +84,7 @@ def main():
 
     x_resolution = 300
     y_resolution = 15
+    limits = [0, 27]
 
 
     data1 = np.genfromtxt("data/two_body_resonance_filtered_Bplus.csv", delimiter=',')
@@ -93,7 +94,7 @@ def main():
     data = np.append(data1, data2, axis=0)
     inv_mass = np.append(inv_mass1, inv_mass2)
     popt_exp=[1.69e+6, 5.3e+3, 1.7e+3]
-    dalitz_values, dalitz_x_bins, dalitz_y_bins = subtract_background(popt=popt_exp, inv_mass_all=inv_mass, two_body_all=data, bins=[x_resolution,y_resolution], transpose=True)
+    dalitz_values, dalitz_x_bins, dalitz_y_bins = subtract_background(popt=popt_exp, inv_mass_all=inv_mass, two_body_all=data, bins=[x_resolution,y_resolution], transpose=True, limits=limits)
     values, bins_x, bins_y = variable_bins(dalitz_values, dalitz_x_bins, dalitz_y_bins, resolution_x=x_resolution, resolution_y=y_resolution)
     hist_values, hist_x, hist_y = convert_2d_hist(values[1:], bins_x[1:], bins_y, x_resolution=x_resolution)
     #plt.hist2d(hist_values, bins=[hist_x, hist_y])
@@ -123,7 +124,7 @@ def main():
     
     #plt.show()
 
-    get_Bplus_Bminus(data1, data2, bins_x, bins_y, x_resolution, y_resolution)
+    get_Bplus_Bminus(data1, data2, bins_x, bins_y, x_resolution, y_resolution, limits_x=limits)
 
 
 
