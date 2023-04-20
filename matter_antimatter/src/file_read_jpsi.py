@@ -29,10 +29,12 @@ def two_body_muon_reconstruction(momentum_1 = [0, 0, 0],
                                 momentum_3  = [0, 0, 0],
                                 muon_prob   = [1, 1, 1]):     
     cleaned_momentum = []
+    total_momentum_array = [momentum_1, momentum_2, momentum_3]
+
     for i in range(3):
         if muon_prob[i] == 1:
-            cleaned_momentum.append([momentum_1[i], momentum_2[i], momentum_3[i]])
-
+            cleaned_momentum.append(total_momentum_array[i])
+    del total_momentum_array
     momentum_1 = cleaned_momentum[0]
     momentum_2 = cleaned_momentum[1]
 
@@ -49,7 +51,7 @@ def two_body_muon_reconstruction(momentum_1 = [0, 0, 0],
 
     inv_mass_squared = energy_squared - (total_momentum_x**2 + total_momentum_y**2 + total_momentum_z**2)
 
-    return np.squrt(inv_mass_squared)
+    return np.sqrt(inv_mass_squared)
 
 
 
@@ -122,16 +124,17 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
 
 
                 if selection:
-
                     probabilities_itr = [[data['H1_ProbPi'][i], data['H1_ProbK'][i]],
                                         [data['H2_ProbPi'][i], data['H2_ProbK'][i]],
                                         [data['H3_ProbPi'][i], data['H3_ProbK'][i]]]
+                    
                     charges_itr = [data['H1_Charge'][i], data['H2_Charge'][i], data['H3_Charge'][i]]
                     
                     muon_prob = [data['H1_isMuon'][i], data['H2_isMuon'][i], data['H3_isMuon'][i]]
 
+
                     #if there are no muons we can continue
-                    if not any(muon_prob):
+                    if muon_prob.count(1) !=2:
                         continue
                     
                     if selection_rule_iterator(probabilities_itr, charges_itr) is False:
@@ -157,6 +160,7 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
                     #now we have an array of [0, 0, 1] where there is a kaon  in the third place
                     #we need to find the the ind
                 
+                
                     # Your invariant mass calculation should go here
                     p1_array = [data['H1_PX'][i], data['H1_PY'][i], data['H1_PZ'][i]]
                     p2_array = [data['H2_PX'][i], data['H2_PY'][i], data['H2_PZ'][i]]
@@ -164,9 +168,6 @@ def read_file(path_name="", MAX_EVENTS=5000, mode=1, keys = list_of_interesting_
 
                     jpsi_inv_mass = two_body_muon_reconstruction(p1_array, p2_array, p3_array, muon_prob)
                     jpsi_reconstructed.append(jpsi_inv_mass)
-
-                
-
 
     return jpsi_reconstructed
     
