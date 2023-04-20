@@ -10,7 +10,7 @@ def local_asymmetry( Bplus_data = [], Bminus_data = [], x_resolution=200, y_reso
     x_centres_Bplus, y_centres_Bplus, weigths_Bplus = Bplus_data
     x_centres_Bminus, y_centres_Bminus, weigths_Bminus = Bminus_data
 
-    print(weigths_Bplus[10, 20], weigths_Bminus[10, 20])
+    #print(weigths_Bplus[10, 20], weigths_Bminus[10, 20])
 
     all_events = np.sum(weigths_Bplus) + np.sum(weigths_Bminus)
 
@@ -18,7 +18,7 @@ def local_asymmetry( Bplus_data = [], Bminus_data = [], x_resolution=200, y_reso
 
     asymmetry = (weigths_Bminus - weigths_Bplus) / (weigths_Bplus + weigths_Bminus)
     asymmetry = np.where(np.isnan(asymmetry), np.full(np.shape(asymmetry), np.nan), asymmetry)
-    print(asymmetry[10, 20])
+    #print(asymmetry[10, 20])
 
     sum = (weigths_Bplus + weigths_Bminus)
     difference = (weigths_Bminus - weigths_Bplus)
@@ -39,7 +39,7 @@ def local_asymmetry( Bplus_data = [], Bminus_data = [], x_resolution=200, y_reso
     #sigma_asymmetry = np.sqrt((np.square(asymmetry) + np.square(np.square(asymmetry))) / sum) 
     sigma_asymmetry = np.where(np.isinf(sigma_asymmetry), np.full(np.shape(sigma_asymmetry), np.nan), sigma_asymmetry)
     sigma_asymmetry = np.where(np.isnan(sigma_asymmetry), np.full(np.shape(sigma_asymmetry), np.nan), sigma_asymmetry)
-    print(sigma_asymmetry[10, 20])
+    #print(sigma_asymmetry[10, 20])
 
     significance = (asymmetry/sigma_asymmetry)
     #significance = np.where(significance > 5 , significance, np.full(np.shape(significance), np.nan)) #cut siginificant only
@@ -61,6 +61,7 @@ def get_Bplus_Bminus(data_Bplus, data_Bminus, x_bins_edges, y_bins_edges,x_resol
     
     new_values_Bplus, x_bins_Bplus, y_bins_Bplus = use_histogram_frame(data_Bplus, x_bins_edges, y_bins_edges, x_resolution, y_resolution, limits_x)
     new_values_Bminus, x_bins_Bminus, y_bins_Bminus = use_histogram_frame(data_Bminus, x_bins_edges, y_bins_edges, x_resolution, y_resolution, limits_x)
+    print(np.max(new_values_Bminus), np.max(new_values_Bplus))
 
     #x_centres_Bplus, unc = get_bins(x_bins_Bplus, new_values_Bplus)
     x_centres_Bplus = x_bins_Bplus
@@ -86,5 +87,9 @@ def get_Bplus_Bminus(data_Bplus, data_Bminus, x_bins_edges, y_bins_edges,x_resol
     fig.colorbar(image2, cax=None, ax=ax[1])
     fig.colorbar(image3, cax=None, ax=ax[2])
     ax[0].set_xlabel("a")
-    fig.savefig("plots/local_asymmetry_100x30.png")
+    fig.savefig("plots/local_asymmetry_300x20.png")
+    plt.show()
+    
+    significance = np.where(np.abs(significance) > 3 , significance, np.full(np.shape(significance), np.nan)) #cut siginificant only
+    plot2d(significance, x_centres_Bplus, y_centres_Bplus)
     plt.show()

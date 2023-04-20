@@ -1,26 +1,85 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from src.binning_files import get_bins
 from scipy.optimize import curve_fit
-from src.distributions import fit_func_half
-from src.distributions import exponential
-from src.distributions import gaussian
-from src.distributions import half_gaussian
-from src.distributions import fit_func_triple
+from src.distributions import crystal_fitted
+from src.distributions import chi_squared
 
-def attempt_fit(data, p0=[1000, 5100, 50, 1000, 5280, 50, 1000, 1000, 0]):
+from scipy.stats import expon
+from scipy.stats import halfnorm
+from scipy.stats import crystalball
 
-    values, bins, patches = plt.hist(data, bins=200, range=[5100, 5600])
-    x_values, unc = get_bins(bins, values)
-    plt.errorbar(x_values, values, unc, ls='None')
+
+def attempt_fit():
+    #optimal parameters: beta, m, loc, scale, c_norm, comb_mu, comb_sigma, comb_n, tau, xoffset, exp_norm, total_norm
+    #                    |         crystalball      |       half norm            |      expon            |
+
+    popt_all = [1.148e+0, 3.825e+0, 5.284e+3, 2.006e+1, 8.429e+2, 5.096e+3, 4.199e+1, 5.737e+2, 5.297e+3, 1.692e+3, 7.917e+3, 2.140e+2]
+    popt_Bplus = [1.359e+0, 1.713e+0, 5.283e+3, 2.089e+1, 4.282e+2, 5.101e+3, 3.784e+1, 2.309e+2, 4.764e+3, 1.801e+3, 5.343e+3, 2.306e+2]
+    popt_Bminus = [1.079e+0, 5.191e+0, 5.284e+3, 1.936e+1, 5.238e+2, 5.091e+3, 4.458e+1, 3.999e+2, 1.615e+3, 1.618e+3, 5.765e+3, 1.682e+2]
+
+    inv_mass1 = np.genfromtxt("data/inv_mass_filtered_Bplus.csv", delimiter=',')
+    inv_mass2 = np.genfromtxt("data/inv_mass_filtered_Bminus.csv", delimiter=',')
+    inv_mass = np.append(inv_mass1, inv_mass2)
+
+    x_sample = np.linspace(5100, 5600, 100)
+    y_all, bins_x, im1 = plt.hist(inv_mass, bins=100, range=[5100, 5600])
+    y_Bplus, bins_x, im2 = plt.hist(inv_mass1, bins=100, range=[5100, 5600])
+    y_Bminus, bins_x, im3 = plt.hist(inv_mass2, bins=100, range=[5100, 5600])
+    plt.clf()
+
+    fig, ax = plt.subplots(nrows=1, ncols=3, figsize=(20, 6))
+    fig.subplots_adjust(wspace=0.3) # increase horizontal space between plots
     
+    err_y_all = np.sqrt(y_all)
+    popt_all_new, pcov = curve_fit(crystal_fitted, x_sample, y_all, p0=popt_all, sigma=err_y_all, absolute_sigma=True)
+    chi_all = chi_squared(y_all, crystal_fitted(x_sample, *popt_all_new), err_y_all, len(popt_all_new))
+    print(chi_all)
 
-    popt, pcov = curve_fit(fit_func_triple, x_values, values, p0=p0, maxfev=2000000)
+    ax[0].plot(x_sample, crystal_fitted(x_sample, *popt_all_new), label="Fit")
+    ax[0].errorbar(x_sample, y_all, err_y_all, ls='None', capsize=2, label="Data")
+    ax[0].plot(x_sample, expon.pdf(x_sample, popt_all_new[9], popt_all_new[8]) * popt_all_new[10] * popt_all_new[11], label="Comb back", ls='--')
+    ax[0].plot(x_sample, halfnorm.pdf(x_sample, popt_all_new[5], popt_all_new[6]) * popt_all_new[7] * popt_all_new[11], label="Part reconstr", ls='--' )
+    ax[0].plot(x_sample, crystalball.pdf(x_sample, popt_all_new[0], popt_all_new[1], popt_all_new[2], popt_all_new[3]) * popt_all_new[4] * popt_all_new[11], label="Signal", ls='--')
+    ax[0].legend()
+    
+    
+    err_y_Bplus = np.sqrt(y_Bplus)
+    popt_Bplus_new, pcov = curve_fit(crystal_fitted, x_sample, y_Bplus, p0=popt_Bplus, sigma=err_y_Bplus, absolute_sigma=True)
+    chi_Bplus = chi_squared(y_Bplus, crystal_fitted(x_sample, *popt_Bplus_new), err_y_Bplus, len(popt_Bplus_new))
+    print(chi_Bplus)
 
-    plt.plot(x_values, fit_func_triple(x_values, *popt))
-    plt.plot(x_values, exponential(x_values, popt[6], popt[7], popt[8]))
-    plt.plot(x_values, gaussian(x_values, popt[3], popt[4], popt[5]))
-    plt.plot(x_values, half_gaussian(x_values, popt[0], popt[1], popt[2]))
+    ax[1].plot(x_sample, crystal_fitted(x_sample, *popt_Bplus_new), label="Fit")
+    ax[1].errorbar(x_sample, y_Bplus, err_y_Bplus, ls='None', capsize=2, label="Data")
+    ax[1].plot(x_sample, expon.pdf(x_sample, popt_Bplus_new[9], popt_Bplus_new[8]) * popt_Bplus_new[10] * popt_Bplus_new[11], label="Comb back", ls='--')
+    ax[1].plot(x_sample, halfnorm.pdf(x_sample, popt_Bplus_new[5], popt_Bplus_new[6]) * popt_Bplus_new[7] * popt_Bplus_new[11], label="Part reconstr", ls='--' )
+    ax[1].plot(x_sample, crystalball.pdf(x_sample, popt_Bplus_new[0], popt_Bplus_new[1], popt_Bplus_new[2], popt_Bplus_new[3]) * popt_Bplus_new[4] * popt_Bplus_new[11], label="Signal", ls='--')
+    ax[1].legend()
 
-    print(popt)
+    err_y_Bminus = np.sqrt(y_Bminus)
+    popt_Bminus_new, pcov = curve_fit(crystal_fitted, x_sample, y_Bminus, p0=popt_Bminus, sigma=err_y_Bminus, absolute_sigma=True)
+    chi_Bminus = chi_squared(y_Bminus, crystal_fitted(x_sample, *popt_Bminus_new), err_y_Bminus, len(popt_Bminus_new))
+    print(chi_Bminus)
+
+    ax[2].plot(x_sample, crystal_fitted(x_sample, *popt_Bminus_new), label="Fit")
+    ax[2].errorbar(x_sample, y_Bminus, err_y_Bminus, ls='None', capsize=2, label="Data")
+    ax[2].plot(x_sample, expon.pdf(x_sample, popt_Bminus_new[9], popt_Bminus_new[8]) * popt_Bminus_new[10] * popt_Bminus_new[11], label="Comb back", ls='--')
+    ax[2].plot(x_sample, halfnorm.pdf(x_sample, popt_Bminus_new[5], popt_Bminus_new[6]) * popt_Bminus_new[7] * popt_Bminus_new[11], label="Part reconstr", ls='--' )
+    ax[2].plot(x_sample, crystalball.pdf(x_sample, popt_Bminus_new[0], popt_Bminus_new[1], popt_Bminus_new[2], popt_Bminus_new[3]) * popt_Bminus_new[4] * popt_Bminus_new[11], label="Signal", ls='--')
+    ax[2].legend()
+
+    ax[0].set_title("Invariant mass all events")
+    ax[1].set_title("Invariant mass $B^{+}$")
+    ax[2].set_title("Invariant mass $B^{-}$")
+
+    ax[0].set_xlabel("Invariant mass (MeV)")
+    ax[0].set_ylabel("Counts / 5 MeV")
+    ax[1].set_xlabel("Invariant mass (MeV)")
+    ax[1].set_ylabel("Counts / 5 MeV")
+    ax[2].set_xlabel("Invariant mass (MeV)")
+    ax[2].set_ylabel("Counts / 5 MeV")
+
+
+    fig.savefig("plots/fits_invariant_mass_100bins.png")
     plt.show()
+
+    return popt_all_new, popt_Bplus_new, popt_Bminus_new
