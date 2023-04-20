@@ -6,9 +6,14 @@ from utils.histogram import plot_frame
 from utils.histogram import plot2d
 
 
+from scipy.optimize import curve_fit
+from src.distributions import norm_fitted
+from src.distributions import chi_squared
+
+
 def local_asymmetry( Bplus_data = [], Bminus_data = [], x_resolution=200, y_resolution=50 ):
-    x_centres_Bplus, y_centres_Bplus, weigths_Bplus = Bplus_data
-    x_centres_Bminus, y_centres_Bminus, weigths_Bminus = Bminus_data
+    weigths_Bplus = Bplus_data
+    weigths_Bminus = Bminus_data
 
     #print(weigths_Bplus[10, 20], weigths_Bminus[10, 20])
 
@@ -59,8 +64,8 @@ def local_asymmetry( Bplus_data = [], Bminus_data = [], x_resolution=200, y_reso
 
 def get_Bplus_Bminus(data_Bplus, data_Bminus, x_bins_edges, y_bins_edges,x_resolution=200, y_resolution=50, limits_x=[0, 20]):
     
-    new_values_Bplus, x_bins_Bplus, y_bins_Bplus = use_histogram_frame(data_Bplus, x_bins_edges, y_bins_edges, x_resolution, y_resolution, limits_x)
-    new_values_Bminus, x_bins_Bminus, y_bins_Bminus = use_histogram_frame(data_Bminus, x_bins_edges, y_bins_edges, x_resolution, y_resolution, limits_x)
+    new_values_Bplus, x_bins_Bplus, y_bins_Bplus, Bplus_flat = use_histogram_frame(data_Bplus, x_bins_edges, y_bins_edges, x_resolution, y_resolution, limits_x)
+    new_values_Bminus, x_bins_Bminus, y_bins_Bminus, Bminus_flat = use_histogram_frame(data_Bminus, x_bins_edges, y_bins_edges, x_resolution, y_resolution, limits_x)
     print(np.max(new_values_Bminus), np.max(new_values_Bplus))
 
     #x_centres_Bplus, unc = get_bins(x_bins_Bplus, new_values_Bplus)
@@ -78,18 +83,48 @@ def get_Bplus_Bminus(data_Bplus, data_Bminus, x_bins_edges, y_bins_edges,x_resol
     fig.subplots_adjust(wspace=0.3) # increase horizontal space between plots
     #plot_frame(x_bins_edges[1:], y_bins_edges[1:], x_resolution, limits_x, ax[0])
     #local_asymmetry([x_centres_Bplus, y_centres_Bplus, new_values_Bplus], [x_centres_Bminus, y_centres_Bminus, new_values_Bminus], x_resolution, y_resolution)
-    asymmetry, sigma_asymmetry, significance= local_asymmetry([x_bins_Bplus, y_bins_Bplus, new_values_Bplus], [x_bins_Bminus, y_bins_Bminus, new_values_Bminus], x_resolution, y_resolution)
-    
+    asymmetry, sigma_asymmetry, significance= local_asymmetry(new_values_Bplus, new_values_Bminus, x_resolution, y_resolution)
+    asymmetry_flat, sigma_flat, significance_flat = local_asymmetry(Bplus_flat, Bminus_flat, x_resolution, y_resolution)
     axes, image1 = plot2d(asymmetry, x_centres_Bplus, y_centres_Bplus, ax=ax[0])
     axes, image2 = plot2d(sigma_asymmetry, x_centres_Bplus, y_centres_Bplus, ax=ax[1])
     axes, image3 = plot2d(significance, x_centres_Bplus, y_centres_Bplus, ax=ax[2])
     fig.colorbar(image1, cax=None, ax=ax[0])
     fig.colorbar(image2, cax=None, ax=ax[1])
     fig.colorbar(image3, cax=None, ax=ax[2])
-    ax[0].set_xlabel("a")
-    fig.savefig("plots/local_asymmetry_300x20.png")
+    ax[0].set_ylabel("$m^{2}_{\pi \pi} GeV^2$")
+    ax[0].set_xlabel("$m^{2}_{K \pi} GeV^2$")
+    ax[0].set_title("Local asymmetry")
+
+    ax[1].set_ylabel("$m^{2}_{\pi \pi} GeV^2$")
+    ax[1].set_xlabel("$m^{2}_{K \pi} GeV^2$")
+    ax[1].set_title("Local asymmetry uncertainty")
+
+    ax[2].set_ylabel("$m^{2}_{\pi \pi} $")
+    ax[2].set_xlabel("$m^{2}_{K \pi} $")
+    ax[2].set_title("Local asymmetry significance")
+    fig.savefig("plots/local_asymmetry_300x20_transpose.png")
     plt.show()
     
     significance = np.where(np.abs(significance) > 3 , significance, np.full(np.shape(significance), np.nan)) #cut siginificant only
     plot2d(significance, x_centres_Bplus, y_centres_Bplus)
+    plt.ylabel("$m^{2}_{\pi \pi}$")
+    plt.xlabel("$m^{2}_{K \pi} $")
+    plt.title("regions with significance above 3 $\sigma$")
+    plt.savefig("plots/local_asymmetry_300x20_transpose_significant.png")
+    plt.show()
+    sign_values, sign_x, image_sign = plt.hist(significance_flat, 30, range=[-6, 6])
+    plt.cla()
+    sign_x_centres, sign_unc = get_bins(sign_x, sign_values)
+    sign_unc = np.where(sign_unc == 0, np.full(np.shape(sign_unc), 1), sign_unc)
+    popt, pcov = curve_fit(norm_fitted, sign_x_centres, sign_values, p0=[0, 1, 50], sigma=sign_unc, absolute_sigma=True)
+    plt.plot(sign_x_centres, norm_fitted(sign_x_centres, *popt))
+    plt.errorbar(sign_x_centres, sign_values, sign_unc, ls='None', capsize=2)
+    print(popt)
+    print(np.sqrt(np.diag(pcov)))
+    chi_fit = chi_squared(sign_values, norm_fitted(sign_x_centres, *popt), sign_unc, 3)
+    print(chi_fit)
+    plt.xlabel("units of $\sigma$")
+    plt.ylabel("$counts / 0.4 \sigma $")
+    plt.title("Local asymmetry histogram")
+    plt.savefig("plots/local_asymmetry_300x20_transpose_consistent.png")
     plt.show()

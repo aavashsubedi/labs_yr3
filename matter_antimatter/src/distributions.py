@@ -2,6 +2,7 @@ import numpy as np
 from scipy.stats import crystalball
 from scipy.stats import halfnorm
 from scipy.stats import expon
+from scipy.stats import norm
 
 def gaussian(x, norm, mean, sigma):
     return np.array( (1 / sigma) * (1/np.sqrt(2 * np.pi)) * norm * np.exp( -0.5 * ( (x-mean)/sigma )**2 ) )
@@ -52,3 +53,6 @@ def crystal_fitted(x, beta, m, loc, scale, c_norm, comb_mu, comb_sigma, comb_n, 
 
 def chi_squared(y, y_theory, err, number_params):
     return np.sum(((y - y_theory) / err )**2) / (len(y) - number_params)
+
+def norm_fitted(x, mu, sigma, N):
+    return norm.pdf(x, mu, sigma) * N
