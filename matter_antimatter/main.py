@@ -25,6 +25,13 @@ from src.fitting_inv_mass import attempt_fit
 from src.local_regions import fit_region
 from src.fit_muon import jpsi_fit
 
+from src.file_reading import read_file
+from src.fit_muon import asymmetry_jpsi
+
+import mplhep as hep
+
+hep.style.use("LHCb2")
+
 
 def main():
     
@@ -34,7 +41,7 @@ def main():
     #popt_all, popt_Bplus, popt_Bminus = attempt_fit()
 
     
-    
+    """
     #procedure to get local asymmetry
     x_resolution = 300
     y_resolution = 20
@@ -43,7 +50,7 @@ def main():
 
     data1 = np.genfromtxt("data/two_body_resonance_filtered_Bplus.csv", delimiter=',')
     data2 = np.genfromtxt("data/two_body_resonance_filtered_Bminus.csv", delimiter=',')
-    """
+    
     # Swapping axes on dalitz plot
     data1_swap1 = data1[:, 0]
     data1_swap2 = data1[:, 1]
@@ -52,15 +59,23 @@ def main():
     data2_swap1 = data2[:, 0]
     data2_swap2 = data2[:, 1]
     data2 = np.append(np.array([data2_swap2]).T, np.array([data2_swap1]).T, axis=1)
-    """
+    
     inv_mass1 = np.genfromtxt("data/inv_mass_filtered_Bplus.csv", delimiter=',')
     inv_mass2 = np.genfromtxt("data/inv_mass_filtered_Bminus.csv", delimiter=',')
     data = np.append(data1, data2, axis=0)
     inv_mass = np.append(inv_mass1, inv_mass2)
 
     #get data for specific region
-    fit_region(data1[:, 0], data1[:, 1], inv_mass1)
-    
+    fit_region(data2[:, 0], data2[:, 1], inv_mass2)
+    """
+    from utils.misc_plots import plot_comparison
+
+    #plot_comparison()
+
+    asymmetry_jpsi()
+
+
+
 
     """
     # xoffset, tau, exp_norm, total_norm
