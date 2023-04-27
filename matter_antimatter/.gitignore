@@ -1,4 +1,4 @@
 #ignore all root files
 *.root
-*.ipynb
+
 *.pyc
