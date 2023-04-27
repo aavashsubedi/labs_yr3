@@ -64,6 +64,7 @@ def use_histogram_frame(values, x_bins_edges, y_bins_edges, x_resolution=200, y_
     hist_values = values.transpose()
     histogram_frame = np.linspace(limits_x[0], limits_x[1], x_resolution, endpoint=True)
     converted_values = [np.full(x_resolution, -1)]
+    all_values_flattened = []   #to histogram the significances and compare with the global asymmetry
     
     
 
@@ -88,6 +89,7 @@ def use_histogram_frame(values, x_bins_edges, y_bins_edges, x_resolution=200, y_
                     
             #print(column_value)    
             row_values.append(column_value)
+            all_values_flattened.append(column_value)
         
         for second_column in range(0, len(x_bins_edges[row]) - 1):
             for index in range(0, len(histogram_frame)):
@@ -102,7 +104,8 @@ def use_histogram_frame(values, x_bins_edges, y_bins_edges, x_resolution=200, y_
 
 
     converted_values = np.delete(converted_values, 0, axis=0)
-    return converted_values, histogram_frame, y_bins_edges
+    all_values_flattened = np.array(all_values_flattened)
+    return converted_values, histogram_frame, y_bins_edges, all_values_flattened
 
 def plot_frame(x_bins_edges, y_bins_edges, x_resolution=200, limits_x=[0, 20], ax=None):
 

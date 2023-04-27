@@ -10,6 +10,7 @@ from scipy.stats import expon
 
 
 
+
 def variable_bins(values, x_bins_edges, y_bins_edges, resolution_x=200, resolution_y=30, tolerance=0.01):
 
     low_limit_x = 0
@@ -202,6 +203,7 @@ def subtract_background(popt=[], signal_limits=[5235, 5333], combinatorial_limit
     #print(image1[1].shape)
 
     return weight_subtracted, image1[1], image1[2]
+
 
 
 
