@@ -105,6 +105,7 @@ def variable_bins(values, x_bins_edges, y_bins_edges, resolution_x=200, resoluti
     #print(np.sum(values))
     flat_values = np.hstack(new_values)
     print("Max bin value is: {}".format(np.amax(flat_values)))
+    print("min bin value is: {}".format(np.amin(flat_values)))
 
     return new_values[1:], new_x_bins_edges[1:], y_bins_edges
                     
@@ -170,14 +171,14 @@ def subtract_background(popt=[], signal_limits=[5235, 5333], combinatorial_limit
     fig, ax = plt.subplots(nrows=1, ncols=3, figsize=(20, 6))
     fig.subplots_adjust(wspace=0.3) # increase horizontal space between plots
     image1 = ax[0].hist2d(np.square(column1_s / 10**3), np.square(column2_s / 10**3), bins=bins, range=[limits, limits])
-    ax[0].set_xlabel("$K \pi$")
-    ax[0].set_ylabel("$\pi \pi$")
+    ax[0].set_xlabel("$M_{K \pi}^2$[GeV$^2$]", fontsize=26)
+    ax[0].set_ylabel("$M{\pi \pi}^2$[GeV$^2$]", fontsize=26)
     ax[0].set_title("Dalitz plot of signal peak")
     fig.colorbar(image1[3], cax=None, ax=ax[0])
 
     image2 = ax[1].hist2d(np.square(column1_c / 10**3), np.square(column2_c / 10**3), bins=bins, range=[limits, limits])
-    ax[1].set_xlabel("$K \pi$")
-    ax[1].set_ylabel("$\pi \pi$")
+    ax[1].set_xlabel("$M_{K \pi}^2$[GeV$^2$]", fontsize=26)
+    ax[1].set_ylabel("$M_{\pi \pi}^2$[GeV$^2$]", fontsize=26)
     ax[1].set_title("Dalitz plot of combinatorial region")
     fig.colorbar(image2[3], cax=None, ax=ax[1])
 
@@ -192,11 +193,11 @@ def subtract_background(popt=[], signal_limits=[5235, 5333], combinatorial_limit
     #weight_subtracted = np.where(weight_subtracted == 0, np.full(np.shape(weight_subtracted), np.nan), weight_subtracted)
 
     axis3, image3 = plot2d(weight_subtracted.transpose(), image1[1], image1[2], ax[2])
-    ax[2].set_xlabel("$K \pi$")
-    ax[2].set_ylabel("$\pi \pi$")
+    ax[2].set_xlabel("$M_{K \pi}^2$[GeV$^2$]", fontsize=26)
+    ax[2].set_ylabel("$M_{\pi \pi}^2$[GeV$^2$]", fontsize=26)
     ax[2].set_title("Dalitz plot subtracted")
     fig.colorbar(image3, cax=None, ax=ax[2])
-    #fig.savefig("plots/subtract_dalitz.png", dpi=600)
+    #fig.savefig("plots/subtract_dalitz_30x30.png", dpi=600)
     plt.show()
 
     #print(weight_subtracted.shape)

@@ -27,7 +27,7 @@ def attempt_fit():
     y_Bminus, bins_x, im3 = plt.hist(inv_mass2, bins=100, range=[5100, 5600])
     plt.clf()
 
-    fig, ax = plt.subplots(nrows=1, ncols=3, figsize=(20, 6))
+    fig, ax = plt.subplots(nrows=1, ncols=3, figsize=(27, 9))
     fig.subplots_adjust(wspace=0.3) # increase horizontal space between plots
     
     err_y_all = np.sqrt(y_all)
@@ -36,11 +36,11 @@ def attempt_fit():
     print(chi_all)
 
     ax[0].plot(x_sample, crystal_fitted(x_sample, *popt_all_new), label="Fit")
-    ax[0].errorbar(x_sample, y_all, err_y_all, ls='None', capsize=2, label="Data")
-    ax[0].plot(x_sample, expon.pdf(x_sample, popt_all_new[9], popt_all_new[8]) * popt_all_new[10] * popt_all_new[11], label="Comb back", ls='--')
-    ax[0].plot(x_sample, halfnorm.pdf(x_sample, popt_all_new[5], popt_all_new[6]) * popt_all_new[7] * popt_all_new[11], label="Part reconstr", ls='--' )
+    ax[0].errorbar(x_sample, y_all, err_y_all, ls='None', capsize=4, label="Data")
+    ax[0].plot(x_sample, expon.pdf(x_sample, popt_all_new[9], popt_all_new[8]) * popt_all_new[10] * popt_all_new[11], label="Combinatorial", ls='--')
+    ax[0].plot(x_sample, halfnorm.pdf(x_sample, popt_all_new[5], popt_all_new[6]) * popt_all_new[7] * popt_all_new[11], label=r"B$\rightarrow$4 body", ls='--' )
     ax[0].plot(x_sample, crystalball.pdf(x_sample, popt_all_new[0], popt_all_new[1], popt_all_new[2], popt_all_new[3]) * popt_all_new[4] * popt_all_new[11], label="Signal", ls='--')
-    ax[0].legend()
+    ax[0].legend(fontsize=18)
     
     
     err_y_Bplus = np.sqrt(y_Bplus)
@@ -49,11 +49,11 @@ def attempt_fit():
     print(chi_Bplus)
 
     ax[1].plot(x_sample, crystal_fitted(x_sample, *popt_Bplus_new), label="Fit")
-    ax[1].errorbar(x_sample, y_Bplus, err_y_Bplus, ls='None', capsize=2, label="Data")
-    ax[1].plot(x_sample, expon.pdf(x_sample, popt_Bplus_new[9], popt_Bplus_new[8]) * popt_Bplus_new[10] * popt_Bplus_new[11], label="Comb back", ls='--')
-    ax[1].plot(x_sample, halfnorm.pdf(x_sample, popt_Bplus_new[5], popt_Bplus_new[6]) * popt_Bplus_new[7] * popt_Bplus_new[11], label="Part reconstr", ls='--' )
+    ax[1].errorbar(x_sample, y_Bplus, err_y_Bplus, ls='None', capsize=4, label="Data")
+    ax[1].plot(x_sample, expon.pdf(x_sample, popt_Bplus_new[9], popt_Bplus_new[8]) * popt_Bplus_new[10] * popt_Bplus_new[11], label="Combinatorial", ls='--')
+    ax[1].plot(x_sample, halfnorm.pdf(x_sample, popt_Bplus_new[5], popt_Bplus_new[6]) * popt_Bplus_new[7] * popt_Bplus_new[11], label=r"B$\rightarrow$4 body", ls='--' )
     ax[1].plot(x_sample, crystalball.pdf(x_sample, popt_Bplus_new[0], popt_Bplus_new[1], popt_Bplus_new[2], popt_Bplus_new[3]) * popt_Bplus_new[4] * popt_Bplus_new[11], label="Signal", ls='--')
-    ax[1].legend()
+    ax[1].legend(fontsize=18)
 
     err_y_Bminus = np.sqrt(y_Bminus)
     popt_Bminus_new, pcov = curve_fit(crystal_fitted, x_sample, y_Bminus, p0=popt_Bminus, sigma=err_y_Bminus, absolute_sigma=True)
@@ -61,22 +61,22 @@ def attempt_fit():
     print(chi_Bminus)
 
     ax[2].plot(x_sample, crystal_fitted(x_sample, *popt_Bminus_new), label="Fit")
-    ax[2].errorbar(x_sample, y_Bminus, err_y_Bminus, ls='None', capsize=2, label="Data")
-    ax[2].plot(x_sample, expon.pdf(x_sample, popt_Bminus_new[9], popt_Bminus_new[8]) * popt_Bminus_new[10] * popt_Bminus_new[11], label="Comb back", ls='--')
-    ax[2].plot(x_sample, halfnorm.pdf(x_sample, popt_Bminus_new[5], popt_Bminus_new[6]) * popt_Bminus_new[7] * popt_Bminus_new[11], label="Part reconstr", ls='--' )
+    ax[2].errorbar(x_sample, y_Bminus, err_y_Bminus, ls='None', capsize=4, label="Data")
+    ax[2].plot(x_sample, expon.pdf(x_sample, popt_Bminus_new[9], popt_Bminus_new[8]) * popt_Bminus_new[10] * popt_Bminus_new[11], label="Combinatorial", ls='--')
+    ax[2].plot(x_sample, halfnorm.pdf(x_sample, popt_Bminus_new[5], popt_Bminus_new[6]) * popt_Bminus_new[7] * popt_Bminus_new[11], label=r"B$\rightarrow$4 body", ls='--' )
     ax[2].plot(x_sample, crystalball.pdf(x_sample, popt_Bminus_new[0], popt_Bminus_new[1], popt_Bminus_new[2], popt_Bminus_new[3]) * popt_Bminus_new[4] * popt_Bminus_new[11], label="Signal", ls='--')
-    ax[2].legend()
+    ax[2].legend(fontsize=18)
 
     ax[0].set_title("Invariant mass all events")
     ax[1].set_title("Invariant mass $B^{+}$")
     ax[2].set_title("Invariant mass $B^{-}$")
 
-    ax[0].set_xlabel("Invariant mass (MeV)")
-    ax[0].set_ylabel("Counts / 5 MeV")
-    ax[1].set_xlabel("Invariant mass (MeV)")
-    ax[1].set_ylabel("Counts / 5 MeV")
-    ax[2].set_xlabel("Invariant mass (MeV)")
-    ax[2].set_ylabel("Counts / 5 MeV")
+    ax[0].set_xlabel("Invariant mass (MeV)", fontsize=18)
+    ax[0].set_ylabel("Counts / 5 MeV", fontsize=18)
+    ax[1].set_xlabel("Invariant mass (MeV)", fontsize=18)
+    ax[1].set_ylabel("Counts / 5 MeV", fontsize=18)
+    ax[2].set_xlabel("Invariant mass (MeV)", fontsize=18)
+    ax[2].set_ylabel("Counts / 5 MeV", fontsize=18)
 
 
     fig.savefig("plots/fits_invariant_mass_100bins.png")

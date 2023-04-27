@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 
 def plot_comparison():
     x_data = [0.028, 0.049, 0.032, 0.049]
-    x_err = [0.03, 0.033, 0.011, 0.011]
+    x_err = [0.03, 0.033, 0.011, 0.015]
 
     y_data = [3, 4, 2, 1]
     fig = plt.figure(figsize=(14, 6))
@@ -17,7 +17,7 @@ def plot_comparison():
     axes.set_xlim([-0.02, 0.1])
     axes.set_ylim([0.5, 4.5])
     axes.get_yaxis().set_visible(False)
-    axes.set_title("Asymmetry values from different experiments")
+    axes.set_title("Global asymmetry values from different experiments")
     axes.set_xlabel("Asymmetry", fontsize=26)
     plt.savefig("plots/comparison_results.png", dpi=600)
     plt.show()
